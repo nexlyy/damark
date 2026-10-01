@@ -1,0 +1,620 @@
+<!doctype html>
+<!--
+  DaMark: one link for TikTok and Instagram bios.
+
+  The page is a single file with no build step. Every address it points to is
+  written into its button below. To change one, search this file for it:
+
+    https://t.me/Anna_Kriukovets      manager, Telegram (orders)
+    viber://chat?number=%2B380671770035   manager, Viber (orders)
+    https://t.me/DaMrkshop            stock group, Telegram (read-only)
+    https://www.tiktok.com/@damark_anna
+    https://www.instagram.com/damarkshop/
+
+  Opened inside TikTok, Instagram or Facebook, the page asks the visitor to move
+  to a real browser first: those apps often will not hand a t.me or viber://
+  link on to Telegram or Viber. Add ?inapp=1 to the address to see that screen
+  in an ordinary browser.
+-->
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#cfe8fa">
+<title>DaMark 💙 — замовлення та наявність</title>
+<meta name="description" content="DaMark: одяг, білизна, аксесуари. Замовлення — тільки через менеджера @Anna_Kriukovets у Telegram або Viber 067 177 00 35.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DaMark 💙">
+<meta property="og:description" content="Одяг • білизна • аксесуари. Замовлення — тільки через менеджера.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #eef6fc;
+    --ink: #0f2747;
+    --muted: #4f6788;
+    --brand: #1658a8;
+    --sky: #5fb0ea;
+    --sky-soft: #dcefff;
+    --card: #ffffff;
+    --navy: #133d74;
+    --telegram: #2aabee;
+    --viber: #7360f2;
+    --warn-bg: #fff5e6;
+    --warn-line: #f2c26b;
+    --warn-ink: #6b3f00;
+    --alarm: #c4291c;
+    --shadow: 0 1px 0 rgba(15, 39, 71, .05), 0 8px 22px -12px rgba(15, 39, 71, .45);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #d4ebfb 0, var(--bg) 340px);
+    color: var(--ink);
+    font: 400 16px/1.45 Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  a { color: inherit; }
+  b, strong { font-weight: 700; }
+
+  .page {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px calc(28px + env(safe-area-inset-bottom));
+  }
+
+  /* Header */
+
+  .head {
+    position: relative;
+    text-align: center;
+    padding-top: 64px;
+  }
+  .cover {
+    position: absolute;
+    inset: 0 -16px auto;
+    width: calc(100% + 32px);
+    height: 132px;
+    display: block;
+  }
+  .logo {
+    position: relative;
+    width: 116px;
+    height: 116px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 10px 26px -12px rgba(15, 39, 71, .55);
+    overflow: hidden;
+    background: #eaf6fe;
+  }
+  .logo svg, .logo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .name {
+    margin: 14px 0 2px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+  }
+  .tag { margin: 0; color: var(--muted); font-weight: 500; }
+  .ship {
+    display: inline-block;
+    margin: 12px 0 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* Sections */
+
+  section { margin-top: 28px; }
+  .label {
+    margin: 0 0 4px 4px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+  .lead { margin: 0 4px 12px; color: var(--muted); font-size: 15px; }
+  .lead b { color: var(--ink); }
+  .stack { display: grid; gap: 10px; }
+
+  /* Buttons */
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 66px;
+    padding: 10px 14px 10px 10px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--navy);
+    color: #fff;
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:active { transform: scale(.98); filter: brightness(.96); }
+  .btn:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+  .btn-main {
+    min-height: 76px;
+    background: linear-gradient(135deg, #2f8ff2 0%, #1658a8 100%);
+  }
+  .btn-light { background: var(--card); color: var(--ink); }
+
+  .ico {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    color: #fff;
+  }
+  .ico svg { width: 26px; height: 26px; }
+  .btn-main .ico { background: rgba(255, 255, 255, .18); }
+  .ico.tg { background: var(--telegram); }
+  .ico.vb { background: var(--viber); }
+  .ico.tt { background: #111; }
+  .ico.ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+
+  .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .txt b { font-size: 16px; font-weight: 700; }
+  .btn-main .txt b { font-size: 17px; }
+  .txt small { font-size: 13px; opacity: .8; overflow-wrap: anywhere; }
+  .go { flex: none; font-size: 28px; line-height: 1; opacity: .45; }
+
+  /* How to order */
+
+  .steps {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .steps li {
+    padding: 12px 8px 10px;
+    border-radius: 14px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+  .steps i {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin: 0 auto 6px;
+    border-radius: 50%;
+    background: var(--sky-soft);
+    color: var(--brand);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  /* Scam warning */
+
+  .safe {
+    padding: 18px 18px 6px;
+    border: 1px solid var(--warn-line);
+    border-radius: 20px;
+    background: var(--warn-bg);
+    color: var(--warn-ink);
+  }
+  .safe h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: var(--alarm);
+  }
+  .safe h2 svg { flex: none; width: 26px; height: 26px; }
+  .safe ul { margin: 0; padding: 0; list-style: none; }
+  .safe li {
+    position: relative;
+    margin: 0 0 12px;
+    padding-left: 22px;
+    font-size: 15px;
+  }
+  .safe li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: .55em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--alarm);
+  }
+  .safe b { color: #3d2400; }
+
+  .foot {
+    margin-top: 28px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Inside TikTok / Instagram: the strip that stays on top */
+
+  .bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    border: 0;
+    background: #ffd34d;
+    color: #2b2100;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 4px 14px -6px rgba(0, 0, 0, .35);
+  }
+  .bar span { flex: 1; }
+  .bar svg { flex: none; width: 28px; height: 28px; }
+
+  /* Inside TikTok / Instagram: "open this in a browser first" */
+
+  .sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 96px 12px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(6, 20, 42, .82);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    overflow-y: auto;
+  }
+  .arrow {
+    position: fixed;
+    top: 4px;
+    right: 10px;
+    width: 92px;
+    height: 92px;
+    color: #ffd34d;
+    animation: nudge 1.2s ease-in-out infinite;
+  }
+  @keyframes nudge {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(4px, -6px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .arrow { animation: none; } }
+
+  .sheet-card {
+    width: 100%;
+    max-width: 440px;
+    padding: 22px 18px 14px;
+    border-radius: 22px;
+    background: var(--card);
+    color: var(--ink);
+  }
+  .sheet-card h2 { margin: 0 0 6px; font-size: 21px; line-height: 1.25; outline: none; }
+  .sheet-card p { margin: 0 0 14px; color: var(--muted); font-size: 15px; }
+  .sheet-card ol {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+    counter-reset: n;
+  }
+  .sheet-card li {
+    counter-increment: n;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 16px;
+    border-top: 1px solid #e6eef7;
+  }
+  .sheet-card li:first-child { border-top: 0; }
+  .sheet-card li::before {
+    content: counter(n);
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .dots {
+    display: inline-grid;
+    place-items: center;
+    min-width: 34px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 8px;
+    background: #eef3f9;
+    font-weight: 700;
+    letter-spacing: 1px;
+    vertical-align: middle;
+  }
+  .sheet-card .stack { margin-bottom: 6px; }
+  .sheet-card .btn { min-height: 56px; justify-content: center; text-align: center; }
+  .sheet-card .btn-light { box-shadow: inset 0 0 0 1.5px #cfdcec; }
+  .copied { margin: 4px 2px 0 !important; font-size: 14px !important; color: #19734a !important; }
+  .plain {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 12px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<button class="bar" id="bar" type="button" hidden>
+  <span>Telegram не відкривається? Натисніть <b class="dots-inline">⋯</b> вгорі праворуч → «Відкрити в браузері»</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+</button>
+
+<main class="page">
+  <header class="head">
+    <svg class="cover" viewBox="0 0 400 132" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#bfe2f8"/>
+          <stop offset="1" stop-color="#4f9fe0"/>
+        </linearGradient>
+      </defs>
+      <path d="M0 0h400v100c-58 26-122 30-200 12S58 86 0 108Z" fill="url(#sea)"/>
+      <path d="M-10 74c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+      <path d="M-10 46c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".32" stroke-width="3"/>
+      <path d="M-10 18c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="3"/>
+    </svg>
+
+    <div class="logo">
+      <!-- To use the shop's own avatar instead, put logo.jpg next to this file
+           and replace this <svg> with: <img src="logo.jpg" alt="DaMark"> -->
+      <svg viewBox="0 0 120 120" role="img" aria-label="DaMark">
+        <rect width="120" height="120" fill="#eaf6fe"/>
+        <path d="M0 30c20-9 40-9 60 0s40 9 60 0" fill="none" stroke="#c4e5fb" stroke-width="4"/>
+        <path d="M0 84c20-10 40-10 60 0s40 10 60 0v36H0Z" fill="#a5d6f6"/>
+        <path d="M0 96c20-10 40-10 60 0s40 10 60 0v24H0Z" fill="#5fb0ea"/>
+        <text x="60" y="68" text-anchor="middle" font-family="'Dancing Script', cursive" font-size="33" font-weight="700" fill="#1658a8">DaMark</text>
+      </svg>
+    </div>
+
+    <h1 class="name">DaMark 💙</h1>
+    <p class="tag">Одяг • білизна • аксесуари</p>
+    <p class="ship">Доставка 1–2 дні 🚚</p>
+  </header>
+
+  <section aria-labelledby="order">
+    <h2 class="label" id="order">Замовити</h2>
+    <p class="lead">Скрін речі з ефіру надсилайте <b>тільки менеджеру</b> 👇</p>
+
+    <div class="stack">
+      <a class="btn btn-main" data-app href="https://t.me/Anna_Kriukovets">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg>
+        </span>
+        <span class="txt"><b>Замовити в Telegram</b><small>менеджер @Anna_Kriukovets</small></span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>
+
+      <a class="btn" data-app href="viber://chat?number=%2B380671770035">
+        <span class="ico vb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8c5.1 0 8.6 2.8 8.6 7.8s-3.5 7.7-8.6 7.7c-.8 0-1.6-.1-2.4-.2L6.4 20.6v-3.3C4.4 16 3.4 13.7 3.4 10.6c0-5 3.5-7.8 8.6-7.8Z"/><path fill="currentColor" stroke="none" d="M9.3 7.2c.3-.3.7-.2.9.1l.9 1.4c.2.3.1.7-.1.9l-.5.4c.4 1 1.3 1.9 2.3 2.4l.4-.5c.2-.3.6-.3.9-.1l1.4.9c.3.2.4.6.1.9l-.6.7c-.4.4-1 .6-1.6.4-2.2-.8-3.9-2.5-4.7-4.7-.2-.6 0-1.2.4-1.6Z"/></svg>
+        </span>
+        <span class="txt"><b>Замовити у Viber</b><small>067 177 00 35</small></span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>
+    </div>
+
+    <ol class="steps">
+      <li><i>1</i>Зробіть скрін речі з ефіру</li>
+      <li><i>2</i>Надішліть його менеджеру</li>
+      <li><i>3</i>Оплата тільки на рахунок ФОП</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="look">
+    <h2 class="label" id="look">Товари та ефіри</h2>
+    <div class="stack">
+      <a class="btn btn-light" data-app href="https://t.me/DaMrkshop">
+        <span class="ico tg">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg>
+        </span>
+        <span class="txt"><b>Наявність у Telegram</b><small>група з товарами — тільки перегляд</small></span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>
+
+      <a class="btn btn-light" href="https://www.tiktok.com/@damark_anna">
+        <span class="ico tt">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3c.4 2.3 1.8 3.8 4.1 4v3.2c-1.5.1-2.9-.4-4.1-1.2v6.4c0 3.5-2.6 5.6-5.6 5.6a5.5 5.5 0 0 1-5.5-5.5c0-3.3 2.8-5.9 6.3-5.4v3.3c-1.6-.4-3.2.6-3.2 2.1 0 1.3 1 2.3 2.3 2.3 1.4 0 2.4-.9 2.4-2.6V3h3.3Z"/></svg>
+        </span>
+        <span class="txt"><b>Ефіри в TikTok</b><small>@damark_anna</small></span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>
+
+      <a class="btn btn-light" href="https://www.instagram.com/damarkshop/">
+        <span class="ico ig">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="txt"><b>Instagram</b><small>@damarkshop</small></span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="safe" aria-labelledby="scam">
+    <h2 id="scam">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.8 7.5 10 4.3-1.2 7.5-5.2 7.5-10v-6L12 2.5Z"/><path d="M12 8v5" stroke-linecap="round"/><circle cx="12" cy="16.3" r=".6" fill="currentColor"/></svg>
+      Обережно: шахраї
+    </h2>
+    <ul>
+      <li><b>Ми ніколи не пишемо першими.</b> Якщо «менеджер DaMark» написав вам сам — це шахрай.</li>
+      <li>Замовлення приймає <b>тільки @Anna_Kriukovets</b> у Telegram і Viber <b>067&nbsp;177&nbsp;00&nbsp;35</b>. Звіряйте саме @username і номер — ім’я та фото легко підробити.</li>
+      <li>Оплата — <b>тільки на рахунок ФОП Крюковець Ганна Володимирівна.</b> Жодних переказів на картки.</li>
+      <li>Скріни, ПІБ і телефон надсилайте лише менеджеру — не в групу й не в коментарі.</li>
+    </ul>
+  </section>
+
+  <p class="foot">© DaMark 💙</p>
+</main>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+  <svg class="arrow" viewBox="0 0 92 92" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 84C20 50 40 28 72 16"/><path d="M52 12 74 15 66 36"/></svg>
+
+  <div class="sheet-card">
+    <h2 id="sheet-title" tabindex="-1">Спочатку відкрийте сторінку в браузері</h2>
+    <p id="sheet-why">З <span id="app-name">TikTok</span> Telegram і Viber часто не відкриваються. Це займе 2 секунди:</p>
+    <ol>
+      <li><span>Натисніть <span class="dots" id="dots">⋯</span> у <b>правому верхньому куті</b></span></li>
+      <li><span>Оберіть <b id="menu-item">«Відкрити в браузері»</b></span></li>
+    </ol>
+    <div class="stack">
+      <a class="btn btn-main" id="chrome" hidden><span class="txt"><b>Відкрити в Chrome</b></span></a>
+      <button class="btn btn-light" id="copy" type="button"><span class="txt"><b>Скопіювати посилання</b></span></button>
+    </div>
+    <p class="copied" id="copied" hidden>Скопійовано ✓ Відкрийте Safari або Chrome і вставте посилання в адресний рядок.</p>
+    <a class="plain" id="anyway" hidden>Все одно спробувати тут</a>
+    <button class="plain" id="close" type="button">Закрити</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ua = navigator.userAgent || '';
+  var forced = /[?&]inapp=1(&|$)/.test(location.search);
+
+  var app =
+    /musical_ly|bytedance|tiktok|trill_/i.test(ua) ? 'TikTok' :
+    /instagram/i.test(ua) ? 'Instagram' :
+    /FBAN|FBAV|FB_IAB|FBIOS/.test(ua) ? 'Facebook' :
+    forced ? 'TikTok' : '';
+
+  if (!app) return;
+
+  var android = /android/i.test(ua);
+  var page = location.protocol + '//' + location.host + location.pathname;
+  var $ = function (id) { return document.getElementById(id); };
+
+  var bar = $('bar');
+  var sheet = $('sheet');
+  var anyway = $('anyway');
+  var closeBtn = $('close');
+
+  $('app-name').textContent = app;
+  if (android) {
+    $('dots').textContent = '⋮';
+    bar.querySelector('.dots-inline').textContent = '⋮';
+  }
+  if (app === 'Instagram') {
+    $('menu-item').textContent = android ? '«Відкрити в Chrome»' : '«Відкрити в зовнішньому браузері»';
+  }
+
+  // Android lets a page hand itself to Chrome directly; iOS has no such door.
+  if (android && /^https?:$/.test(location.protocol)) {
+    var chrome = $('chrome');
+    chrome.href = 'intent://' + location.host + location.pathname + location.search +
+      '#Intent;scheme=https;package=com.android.chrome;end';
+    chrome.hidden = false;
+  }
+
+  function show(target) {
+    anyway.hidden = !target;
+    if (target) anyway.href = target;
+    bar.hidden = true;
+    sheet.hidden = false;
+    $('sheet-title').focus();
+  }
+
+  function hide() {
+    sheet.hidden = true;
+    bar.hidden = false;
+  }
+
+  function copied() {
+    $('copied').hidden = false;
+    $('copy').querySelector('b').textContent = 'Посилання скопійовано';
+  }
+
+  function copyByHand() {
+    var field = document.createElement('textarea');
+    field.value = page;
+    field.setAttribute('readonly', '');
+    field.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(field);
+    field.select();
+    field.setSelectionRange(0, page.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(field);
+    if (ok) copied();
+    else window.prompt('Скопіюйте посилання і відкрийте його в браузері:', page);
+  }
+
+  $('copy').addEventListener('click', function () {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(page).then(copied, copyByHand);
+    } else {
+      copyByHand();
+    }
+  });
+
+  bar.addEventListener('click', function () { show(); });
+  closeBtn.addEventListener('click', hide);
+  sheet.addEventListener('click', function (e) { if (e.target === sheet) hide(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) hide(); });
+
+  // Telegram and Viber buttons: explain first, and leave a way through.
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('a[data-app]');
+    if (!link) return;
+    e.preventDefault();
+    show(link.href);
+  });
+
+  show();
+})();
+</script>
+</body>
+</html>
