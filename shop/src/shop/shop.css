@@ -1,0 +1,94 @@
+.shop { min-height: 100vh; display: flex; flex-direction: column; }
+.shop-wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+.shop-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.shop-header .shop-wrap { display: flex; align-items: center; gap: 12px; min-height: 60px; }
+.brand-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 18px; }
+
+
+.shop-hero {
+  margin: 16px 0 8px;
+  padding: 22px 18px;
+  border-radius: 22px;
+  background: var(--hero);
+  color: #0f2747;
+}
+.shop-hero h1 { font-size: 26px; }
+.shop-hero p { margin-top: 6px; max-width: 46ch; font-weight: 500; color: #1d3a63; }
+.shop-hero .row-wrap { margin-top: 16px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .shop-hero,
+  :root:not([data-theme='light']) .brand-dot { color: #e8eef7; }
+  :root:not([data-theme='light']) .shop-hero p { color: #c5d6ec; }
+}
+.btn.btn-telegram { background: #2aabee; color: #fff; }
+.btn.btn-telegram:hover { background: #1f9ad9; }
+.btn-telegram svg { width: 18px; height: 18px; }
+
+.filters { display: grid; gap: 10px; margin: 16px 0; }
+.search { position: relative; }
+.search svg { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--ink-3); }
+.search .input { padding-left: 40px; }
+
+.grid-products {
+  display: grid;
+  gap: 14px 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 640px) { .grid-products { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 920px) { .grid-products { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.p-card { display: grid; gap: 8px; text-decoration: none; }
+.p-card .photo { border-radius: 14px; }
+.p-card .badge { position: absolute; left: 8px; top: 8px; background: var(--surface); }
+.p-card-title { font-weight: 600; line-height: 1.3; }
+.p-card-meta { font-size: 13px; color: var(--ink-2); }
+.price { font-weight: 700; font-size: 16px; }
+.price s { margin-left: 6px; font-weight: 500; font-size: 13px; color: var(--ink-3); }
+.p-card.is-sold { opacity: .55; }
+
+.pdp { display: grid; gap: 20px; margin: 16px 0 32px; }
+@media (min-width: 820px) { .pdp { grid-template-columns: 1.1fr 1fr; align-items: start; gap: 32px; } }
+.gallery { display: grid; gap: 8px; }
+.gallery-main .photo { border-radius: 18px; }
+.gallery-thumbs { display: flex; gap: 8px; overflow-x: auto; }
+.gallery-thumbs button { padding: 0; border: 2px solid transparent; border-radius: 12px; background: none; cursor: pointer; }
+.gallery-thumbs button[aria-pressed='true'] { border-color: var(--brand); }
+.gallery-thumbs .photo { width: 64px; border-radius: 10px; }
+.pdp-info { display: grid; gap: 16px; }
+.pdp-info h1 { font-size: 24px; }
+.pdp-price { font-size: 26px; font-weight: 700; }
+.pdp-price s { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--ink-3); }
+.facts { display: grid; gap: 0; margin: 0; }
+.facts div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line); }
+.facts dt { color: var(--ink-2); }
+.facts dd { margin: 0; font-weight: 600; text-align: right; }
+.size-chip { min-width: 52px; justify-content: center; display: inline-flex; align-items: center; }
+
+.order-box { display: grid; gap: 10px; padding: 16px; border-radius: 18px; background: var(--brand-soft); }
+.order-box .code { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.safe-note {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fff5e6;
+  color: #5c3700;
+  font-size: 13px;
+}
+.safe-note svg { flex: none; width: 20px; height: 20px; color: #c4291c; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .safe-note { background: #3a2a10; color: #f6dcb0; }
+}
+
+.shop-footer { margin-top: auto; padding: 28px 0 36px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: 13px; }
+.shop-footer .shop-wrap { display: grid; gap: 12px; }
