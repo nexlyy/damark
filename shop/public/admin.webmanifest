@@ -1,0 +1,17 @@
+{
+  "id": "./#/admin",
+  "name": "DaMark · адмінка",
+  "short_name": "DaMark адмін",
+  "description": "Товари, ефіри, замовлення й дашборд DaMark.",
+  "lang": "uk",
+  "start_url": "./#/admin",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f7fb",
+  "theme_color": "#f3f7fb",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

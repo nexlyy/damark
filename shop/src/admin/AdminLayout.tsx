@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Icon, type IconName } from '../components/Icon'
 import { useShop } from '../lib/store'
@@ -18,8 +19,25 @@ const EXTRA: [string, string, IconName][] = [
   ['/admin/settings', 'Налаштування', 'settings'],
 ]
 
+// Added to a home screen from here, the icon should open the admin, not the
+// catalog, and be named for it.
+function useAdminInstall() {
+  useEffect(() => {
+    const manifest = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')
+    const title = document.querySelector<HTMLMetaElement>('meta[name="apple-mobile-web-app-title"]')
+    const was = [manifest?.getAttribute('href'), title?.content] as const
+    manifest?.setAttribute('href', './admin.webmanifest')
+    if (title) title.content = 'DaMark адмін'
+    return () => {
+      if (manifest && was[0]) manifest.setAttribute('href', was[0])
+      if (title && was[1]) title.content = was[1]
+    }
+  }, [])
+}
+
 export function AdminLayout() {
   const { settings } = useShop()
+  useAdminInstall()
 
   return (
     <div className="admin">

@@ -38,9 +38,25 @@ jobs:
       - name: Lay out the site
         run: |
           mkdir -p site/shop
-          cp link/index.html site/index.html
+          cp link/index.html link/og.png site/
           cp -r shop/dist/. site/shop/
           touch site/.nojekyll
+
+      # Pages can also be set to publish the branch as it is, which puts the raw
+      # source files online after every push and races this workflow. Report
+      # which mode is set and switch it to this workflow when the token may.
+      - name: Check how Pages publishes
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mode=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type || echo unknown)
+          echo "Pages build type: $mode"
+          if [ "$mode" = legacy ]; then
+            gh api -X PUT "repos/$GITHUB_REPOSITORY/pages" -f build_type=workflow \
+              && echo "Switched Pages to publish from this workflow" \
+              || echo "::warning::Pages publishes the branch directly. Settings → Pages → Source: GitHub Actions."
+          fi
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
@@ -54,5 +70,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # If Pages still builds the branch too, wait for that build so this
+      # deployment is the one left standing.
+      - name: Let a branch build finish first
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 36); do
+            status=$(gh api "repos/$GITHUB_REPOSITORY/pages/builds/latest" --jq .status 2>/dev/null || echo none)
+            case "$status" in
+              queued|building) echo "Branch build: $status"; sleep 5 ;;
+              *) break ;;
+            esac
+          done
+
       - id: deployment
         uses: actions/deploy-pages@v4

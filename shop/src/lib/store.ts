@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS: ShopSettings = {
   stockGroup: 'DaMrkshop',
   reserveHours: 24,
   blacklist: [],
+  novaPoshta: { apiKey: '', senderName: '', senderPhone: '', senderCity: '', senderBranch: '' },
 }
 
 const EMPTY: ShopData = {
@@ -35,7 +36,11 @@ function load(): ShopData {
     return {
       ...EMPTY,
       ...parsed,
-      settings: { ...DEFAULT_SETTINGS, ...parsed.settings },
+      settings: {
+        ...DEFAULT_SETTINGS,
+        ...parsed.settings,
+        novaPoshta: { ...DEFAULT_SETTINGS.novaPoshta, ...parsed.settings?.novaPoshta },
+      },
     }
   } catch {
     return EMPTY

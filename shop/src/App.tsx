@@ -1,24 +1,14 @@
-import { useEffect } from 'react'
-import { HashRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { Suspense, useEffect, type ReactNode } from 'react'
+import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { ShopLayout } from './shop/ShopLayout'
 import { Catalog } from './shop/Catalog'
 import { ProductPage } from './shop/ProductPage'
-import { AdminLayout, MorePage } from './admin/AdminLayout'
-import { Dashboard } from './admin/Dashboard'
-import { Products } from './admin/Products'
-import { ProductForm } from './admin/ProductForm'
-import { Lives, LiveMode } from './admin/Lives'
-import { Orders } from './admin/Orders'
-import { Customers } from './admin/Customers'
-import { Batches } from './admin/Batches'
-import { Settings } from './admin/Settings'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { lazyPage } from './lib/lazy'
+import { demoData } from './lib/demo'
+import { replaceAll, snapshot } from './lib/store'
 
-// A fresh form for every product, rather than one that keeps the last
-// product's fields when the address changes underneath it.
-function ProductFormRoute() {
-  const { id } = useParams()
-  return <ProductForm key={id ?? 'new'} />
-}
+const AdminRoutes = lazyPage(() => import('./admin/AdminRoutes'))
 
 // A new screen starts at its top, not wherever the last long form was left.
 function ScrollToTop() {
@@ -27,30 +17,57 @@ function ScrollToTop() {
   return null
 }
 
+// A link ending in ?demo=1 opens with the invented example already loaded,
+// so it can be sent to someone who will not go looking for the button. It
+// never replaces products someone has added.
+function DemoFromLink() {
+  const { pathname, search } = useLocation()
+  const navigate = useNavigate()
+  useEffect(() => {
+    const params = new URLSearchParams(search)
+    if (params.get('demo') !== '1') return
+    if (!snapshot().products.length) replaceAll(demoData(snapshot().settings))
+    params.delete('demo')
+    const rest = params.toString()
+    navigate(pathname + (rest ? '?' + rest : ''), { replace: true })
+  }, [pathname, search, navigate])
+  return null
+}
+
+// A screen that fails stays contained, and moving to another screen clears it.
+function Contained({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation()
+  return <ErrorBoundary resetKey={pathname}>{children}</ErrorBoundary>
+}
+
+const loading = (
+  <div className="empty" style={{ margin: 16, border: 0 }} aria-busy="true">
+    Завантаження…
+  </div>
+)
+
 export function App() {
   return (
     <HashRouter>
       <ScrollToTop />
-      <Routes>
-        <Route element={<ShopLayout />}>
-          <Route index element={<Catalog />} />
-          <Route path="item/:id" element={<ProductPage />} />
-        </Route>
-        <Route path="admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="products/new" element={<ProductFormRoute />} />
-          <Route path="products/:id" element={<ProductFormRoute />} />
-          <Route path="lives" element={<Lives />} />
-          <Route path="lives/:id" element={<LiveMode />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="batches" element={<Batches />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="more" element={<MorePage />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <DemoFromLink />
+      <Contained>
+        <Routes>
+          <Route element={<ShopLayout />}>
+            <Route index element={<Catalog />} />
+            <Route path="item/:id" element={<ProductPage />} />
+          </Route>
+          <Route
+            path="admin/*"
+            element={
+              <Suspense fallback={loading}>
+                <AdminRoutes />
+              </Suspense>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Contained>
     </HashRouter>
   )
 }

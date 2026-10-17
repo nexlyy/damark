@@ -118,6 +118,7 @@ export function LiveMode() {
   const live = data.lives.find((l) => l.id === id)
   const [picking, setPicking] = useState(false)
   const [lot, setLot] = useState<number | null>(null)
+  const [find, setFind] = useState('')
   const [toast, say] = useToast()
 
   if (!live) {
@@ -160,6 +161,39 @@ export function LiveMode() {
           <LiveBadge status={live.status} />
         </div>
       </div>
+
+      {lots.length > 0 && (
+        <form
+          className="row"
+          onSubmit={(e) => {
+            e.preventDefault()
+            const n = Number(find)
+            if (n >= 1 && n <= lots.length) {
+              setLot(n - 1)
+              setFind('')
+            } else {
+              say(`Немає лота №${find}`)
+            }
+          }}
+        >
+          <label className="grow">
+            <span className="sr-only">Номер лота</span>
+            <input
+              className="input num"
+              style={{ fontSize: 18, fontWeight: 700 }}
+              inputMode="numeric"
+              pattern="[0-9]*"
+              enterKeyHint="go"
+              placeholder="№ лота з коментаря, напр. 7"
+              value={find}
+              onChange={(e) => setFind(e.target.value.replace(/\D/g, ''))}
+            />
+          </label>
+          <button className="btn" type="submit" disabled={!find}>
+            Відкрити
+          </button>
+        </form>
+      )}
 
       <div className="kpis">
         <div className="card kpi">
@@ -324,6 +358,7 @@ function ReserveSheet({
       delivery: { city: '', branch: '' },
       ttn: '',
       liveId: live.id,
+      source: 'live',
       note: `Лот №${lotNo}`,
     })
     onDone(`Лот №${lotNo} заброньовано · замовлення №${number}`)
@@ -367,10 +402,16 @@ function ReserveSheet({
             </div>
           </div>
         ) : (
-          <>
+          <form
+            className="stack"
+            onSubmit={(e) => {
+              e.preventDefault()
+              reserve()
+            }}
+          >
             <label className="field">
               <span>Нік у TikTok / Telegram</span>
-              <input className="input" autoFocus value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder="@нік з коментаря" />
+              <input className="input" autoFocus value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder="@нік з коментаря" enterKeyHint="done" />
             </label>
             <div className="grid-2">
               <label className="field">
@@ -383,10 +424,10 @@ function ReserveSheet({
               </label>
             </div>
             {warn && <p role="alert" style={{ color: 'var(--critical-ink)', fontWeight: 600 }}>Цей клієнт у чорному списку (відмовлявся від посилок).</p>}
-            <button className="btn" type="button" onClick={reserve} disabled={!telegram.trim() && !name.trim() && !phone.trim()}>
+            <button className="btn" type="submit" disabled={!telegram.trim() && !name.trim() && !phone.trim()}>
               Забронювати
             </button>
-          </>
+          </form>
         )}
       </div>
     </Sheet>

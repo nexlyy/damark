@@ -83,7 +83,7 @@ export function summary(data: ShopData, days: number, now = Date.now()): Summary
   }
 }
 
-export type AttentionKind = 'overdue' | 'ship' | 'refused' | 'blacklist'
+export type AttentionKind = 'overdue' | 'site' | 'ship' | 'refused' | 'blacklist'
 
 export interface Attention {
   kind: AttentionKind
@@ -103,6 +103,9 @@ export function needsAttention(data: ShopData, now = Date.now()): Attention[] {
     if ((o.status === 'new' || o.status === 'awaiting_payment') && hoursSince(o.createdAt, now) > data.settings.reserveHours) {
       out.push({ kind: 'overdue', order: o, text: `Не оплачено понад ${data.settings.reserveHours} год — зняти бронь?` })
     }
+    if (o.status === 'new' && o.source === 'site' && hoursSince(o.createdAt, now) <= data.settings.reserveHours) {
+      out.push({ kind: 'site', order: o, text: 'Нове з сайту — надішліть реквізити, щойно клієнт напише' })
+    }
     if (o.status === 'paid') {
       out.push({ kind: 'ship', order: o, text: 'Оплачено — треба відправити' })
     }
@@ -110,7 +113,7 @@ export function needsAttention(data: ShopData, now = Date.now()): Attention[] {
       out.push({ kind: 'refused', order: o, text: 'Відмова від посилки — додати в чорний список?' })
     }
   }
-  const rank: Record<AttentionKind, number> = { blacklist: 0, overdue: 1, ship: 2, refused: 3 }
+  const rank: Record<AttentionKind, number> = { blacklist: 0, overdue: 1, site: 2, ship: 3, refused: 4 }
   return out.sort((a, b) => rank[a.kind] - rank[b.kind])
 }
 

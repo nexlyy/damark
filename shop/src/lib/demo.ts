@@ -97,6 +97,8 @@ export function demoData(settings: ShopSettings = DEFAULT_SETTINGS, now = Date.n
       items: [{ productId: p.id, title: p.title, size: p.sizes[0].size, price: p.price, cost: p.cost }],
       delivery: { city: CITIES[n % CITIES.length], branch: 'Відділення №' + (n + 3) },
       ttn: status === 'shipped' || status === 'done' || status === 'refused' ? '2045000000' + String(1000 + n) : '',
+      ttnDemo: status === 'shipped' || status === 'done' || status === 'refused' ? true : undefined,
+      source: index < 14 ? 'live' : 'manual',
       liveId: index < 8 ? lives[0].id : lives[1].id,
       note: '',
       paidAt: paid,

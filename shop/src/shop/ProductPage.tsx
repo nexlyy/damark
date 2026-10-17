@@ -5,6 +5,7 @@ import { Empty, Photo, ProductBadge, useToast } from '../components/ui'
 import { useShop } from '../lib/store'
 import { telegramLink, uah, viberLink } from '../lib/format'
 import { CONDITION_LABEL } from '../lib/types'
+import { CheckoutSheet } from './Checkout'
 
 export function ProductPage() {
   const { id } = useParams()
@@ -12,6 +13,7 @@ export function ProductPage() {
   const product = products.find((p) => p.id === id && p.status !== 'draft')
   const [shown, setShown] = useState(0)
   const [toast, say] = useToast()
+  const [checkout, setCheckout] = useState(false)
 
   if (!product) {
     return (
@@ -102,12 +104,25 @@ export function ProductPage() {
 
           <div className="order-box">
             <b>Як замовити</b>
-            <span className="muted">
-              Напишіть менеджеру код <span className="code">{product.code}</span> або надішліть скрін цієї сторінки.
-            </span>
+            {product.status === 'available' ? (
+              <>
+                <span className="muted">
+                  Оформіть тут або напишіть менеджеру код <span className="code">{product.code}</span>.
+                </span>
+                <button className="btn btn-block" type="button" onClick={() => setCheckout(true)}>
+                  <Icon name="check" />
+                  Оформити замовлення
+                </button>
+              </>
+            ) : (
+              <span className="muted">
+                Цю річ уже забронювали. Напишіть менеджеру код <span className="code">{product.code}</span> — якщо бронь
+                не оплатять, вона повернеться в продаж.
+              </span>
+            )}
             <a className="btn btn-telegram btn-block" href={telegramLink(settings.managerTelegram)}>
               <TelegramIcon />
-              Замовити в Telegram
+              Написати в Telegram
             </a>
             <div className="grid-2">
               <a className="btn btn-ghost" href={viberLink(settings.viberPhone)}>
@@ -128,6 +143,7 @@ export function ProductPage() {
           </div>
         </div>
       </div>
+      {checkout && <CheckoutSheet product={product} settings={settings} onClose={() => setCheckout(false)} />}
       {toast}
     </main>
   )

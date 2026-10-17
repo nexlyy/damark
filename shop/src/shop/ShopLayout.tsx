@@ -43,7 +43,8 @@ export function ShopLayout() {
           <div className="row-wrap">
             <a href={telegramLink(settings.managerTelegram)}>Telegram менеджера</a>·
             <a href={viberLink(settings.viberPhone)}>Viber</a>·
-            <a href={telegramLink(settings.stockGroup)}>Група наявності</a>
+            <a href={telegramLink(settings.stockGroup)}>Група наявності</a>·
+            <a href="../">Усі наші посилання</a>
           </div>
           <span>© {settings.shopName}</span>
         </div>

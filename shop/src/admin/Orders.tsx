@@ -6,7 +6,8 @@ import { copyText, paymentMessage, shippedMessage } from '../lib/messages'
 import { deleteOrder, newId, nextOrderNumber, saveOrder, setOrderStatus, useShop } from '../lib/store'
 import { dateTime, uah } from '../lib/format'
 import { orderTotal } from '../lib/stats'
-import { ORDER_STATUS_LABEL, type Order, type OrderStatus } from '../lib/types'
+import { ORDER_SOURCE_LABEL, ORDER_STATUS_LABEL, type Order, type OrderStatus } from '../lib/types'
+import { TrackLink, TtnSheet, waybillsForPaid } from './TtnSheet'
 
 const TABS: (OrderStatus | '')[] = ['', 'new', 'awaiting_payment', 'paid', 'shipped', 'done', 'refused', 'cancelled']
 
@@ -14,7 +15,7 @@ const TABS: (OrderStatus | '')[] = ['', 'new', 'awaiting_payment', 'paid', 'ship
 const NEXT: Partial<Record<OrderStatus, [OrderStatus, string]>> = {
   new: ['awaiting_payment', 'Реквізити надіслано'],
   awaiting_payment: ['paid', 'Оплату отримано'],
-  paid: ['shipped', 'Відправлено'],
+  paid: ['shipped', 'Створити ТТН'],
   shipped: ['done', 'Отримано'],
 }
 
@@ -24,6 +25,8 @@ export function Orders() {
   const status = (params.get('status') ?? '') as OrderStatus | ''
   const openId = params.get('open')
   const [editing, setEditing] = useState<Order | 'new' | null>(null)
+  const [ttnFor, setTtnFor] = useState<Order | null>(null)
+  const [bulk, setBulk] = useState<number | null>(null)
   const [toast, say] = useToast()
 
   const opened = editing ?? (openId ? data.orders.find((o) => o.id === openId) ?? null : null)
@@ -42,11 +45,26 @@ export function Orders() {
     const next = NEXT[o.status]
     if (!next) return
     if (next[0] === 'shipped' && !o.ttn) {
-      setEditing({ ...o, status: 'shipped' })
-      say('Вкажіть ТТН і збережіть')
+      setTtnFor(o)
       return
     }
     setOrderStatus(o.id, next[0])
+  }
+
+  const paidCount = data.orders.filter((o) => o.status === 'paid').length
+
+  const shipAll = async () => {
+    setBulk(0)
+    try {
+      const { made, skipped } = await waybillsForPaid(setBulk)
+      say(
+        skipped.length
+          ? `Створено ${made} ТТН. Без даних доставки: №${skipped.map((o) => o.number).join(', №')}`
+          : `Створено ${made} ТТН`,
+      )
+    } finally {
+      setBulk(null)
+    }
   }
 
   const copy = async (text: string, what: string) => say((await copyText(text)) ? `${what} скопійовано` : 'Не вдалося скопіювати')
@@ -58,10 +76,18 @@ export function Orders() {
           <h1>Замовлення</h1>
           <p className="muted">Бронь → оплата → відправка. Статус товару змінюється сам.</p>
         </div>
-        <button className="btn" type="button" onClick={() => setEditing('new')}>
-          <Icon name="plus" />
-          Нове замовлення
-        </button>
+        <div className="row-wrap">
+          {paidCount > 1 && (
+            <button className="btn btn-ghost" type="button" onClick={shipAll} disabled={bulk !== null}>
+              <Icon name="truck" />
+              {bulk === null ? `ТТН для всіх оплачених (${paidCount})` : `Створюємо… ${bulk}/${paidCount}`}
+            </button>
+          )}
+          <button className="btn" type="button" onClick={() => setEditing('new')}>
+            <Icon name="plus" />
+            Нове замовлення
+          </button>
+        </div>
       </div>
 
       <div className="tabs" role="group" aria-label="Статус">
@@ -116,7 +142,12 @@ export function Orders() {
                   {o.customer.telegram && ` · ${o.customer.telegram}`}
                   {o.customer.phone && ` · ${o.customer.phone}`}
                 </div>
-                {blacklisted && <Badge tone="critical">У чорному списку</Badge>}
+                {(blacklisted || o.source === 'site') && (
+                  <div className="row-wrap">
+                    {o.source === 'site' && <Badge tone="brand">{ORDER_SOURCE_LABEL.site}</Badge>}
+                    {blacklisted && <Badge tone="critical">У чорному списку</Badge>}
+                  </div>
+                )}
                 <div>
                   {o.items.map((i) => (
                     <div key={i.productId} className="spread">
@@ -131,7 +162,13 @@ export function Orders() {
                 <div className="spread">
                   <span className="faint">
                     {[o.delivery.city, o.delivery.branch].filter(Boolean).join(', ') || 'Доставка не вказана'}
-                    {o.ttn && ` · ТТН ${o.ttn}`}
+                    {o.ttn && (
+                      <>
+                        {' · '}
+                        <TrackLink ttn={o.ttn} />
+                        {o.ttnDemo && ' (демо)'}
+                      </>
+                    )}
                   </span>
                   <b className="num nowrap">{uah(orderTotal(o))}</b>
                 </div>
@@ -166,6 +203,7 @@ export function Orders() {
       )}
 
       {opened && <OrderSheet key={opened === 'new' ? 'new' : opened.id} initial={opened} onClose={close} onSaved={say} />}
+      {ttnFor && <TtnSheet order={ttnFor} onClose={() => setTtnFor(null)} onDone={say} />}
       {toast}
     </>
   )
@@ -188,6 +226,7 @@ function OrderSheet({
           number: nextOrderNumber(),
           createdAt: new Date().toISOString(),
           status: 'new',
+          source: 'manual',
           customer: { name: '', phone: '', telegram: '' },
           items: [],
           delivery: { city: '', branch: '' },

@@ -14,6 +14,7 @@ const RANGES = [7, 30] as const
 const ATTN_ICON: Record<AttentionKind, IconName> = {
   blacklist: 'alert',
   overdue: 'alert',
+  site: 'store',
   ship: 'truck',
   refused: 'users',
 }

@@ -74,11 +74,21 @@ export interface OrderItem {
   cost: number
 }
 
+// Where the order came from: the buyer's own form on the site, a lot booked
+// during a live, or typed in by the manager from a chat.
+export type OrderSource = 'site' | 'live' | 'manual'
+export const ORDER_SOURCE_LABEL: Record<OrderSource, string> = {
+  site: 'З сайту',
+  live: 'З ефіру',
+  manual: 'Вручну',
+}
+
 export interface Order {
   id: string
   number: number
   createdAt: string
   status: OrderStatus
+  source?: OrderSource
   customer: {
     name: string
     phone: string
@@ -90,6 +100,7 @@ export interface Order {
     branch: string        // Nova Poshta branch or parcel locker
   }
   ttn: string             // Nova Poshta waybill number
+  ttnDemo?: boolean       // made up by the demo, not issued by Nova Poshta
   liveId?: string
   note: string
   paidAt?: string
@@ -128,6 +139,17 @@ export interface ShopSettings {
   stockGroup: string      // t.me username of the read-only stock group
   reserveHours: number    // how long a reservation waits for payment
   blacklist: string[]     // phones or @usernames that refused parcels
+  novaPoshta: NovaPoshtaSettings
+}
+
+// What creating a waybill needs on the sender's side. In production the API
+// key lives on the server; the demo only keeps it to show where it goes.
+export interface NovaPoshtaSettings {
+  apiKey: string
+  senderName: string
+  senderPhone: string
+  senderCity: string
+  senderBranch: string
 }
 
 export interface ShopData {
