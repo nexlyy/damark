@@ -69,7 +69,7 @@ export function CheckoutSheet({ product, settings, onClose }: { product: Product
           <div className="safe-note">
             <Icon name="alert" />
             <span>
-              Ми не пишемо першими. Оплата — тільки на рахунок <b>{settings.fopName}</b>.
+              Оплата — тільки на рахунок <b>{settings.fopName}</b>. Якщо вам надіслали інші реквізити — це шахраї.
             </span>
           </div>
         </div>

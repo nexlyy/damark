@@ -17,7 +17,7 @@ export function ShopLayout() {
       <header className="shop-header">
         <div className="shop-wrap">
           <Link to="/" className="brand-mark">
-            <span className="brand-dot" aria-hidden="true">Da</span>
+            <img className="brand-dot" src="./logo.jpg" alt="" width="36" height="36" />
             {settings.shopName}
           </Link>
           <span className="grow" />
@@ -36,7 +36,7 @@ export function ShopLayout() {
             <Icon name="alert" />
             <span>
               Замовлення приймає тільки <b>@{settings.managerTelegram}</b> у Telegram і Viber{' '}
-              <b>{settings.viberPhone}</b>. Ми ніколи не пишемо першими. Оплата — тільки на рахунок{' '}
+              <b>{settings.viberPhone}</b>. Оплата — тільки на рахунок{' '}
               <b>{settings.fopName}</b>.
             </span>
           </div>

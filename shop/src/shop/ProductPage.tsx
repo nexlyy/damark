@@ -138,7 +138,7 @@ export function ProductPage() {
           <div className="safe-note">
             <Icon name="alert" />
             <span>
-              Оплата — тільки на рахунок <b>{settings.fopName}</b>. Якщо вам написали першими «від магазину» — це шахраї.
+              Оплата — тільки на рахунок <b>{settings.fopName}</b>. Якщо вам надіслали інші реквізити — це шахраї.
             </span>
           </div>
         </div>

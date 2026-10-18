@@ -38,7 +38,7 @@ jobs:
       - name: Lay out the site
         run: |
           mkdir -p site/shop
-          cp link/index.html link/og.png site/
+          find link -maxdepth 1 -type f ! -name '*.md' -exec cp {} site/ \;
           cp -r shop/dist/. site/shop/
           touch site/.nojekyll
 

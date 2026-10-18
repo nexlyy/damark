@@ -43,7 +43,7 @@ export function AdminLayout() {
     <div className="admin">
       <nav className="side" aria-label="Адмін-панель">
         <div className="side-brand">
-          <span className="brand-dot" aria-hidden="true">Da</span>
+          <img className="brand-dot" src="./logo.jpg" alt="" width="36" height="36" />
           {settings.shopName} · адмінка
         </div>
         {MAIN.map(([to, label, icon]) => (

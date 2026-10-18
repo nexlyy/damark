@@ -10,11 +10,11 @@ const KEY = 'damark-shop-demo-v1'
 
 export const DEFAULT_SETTINGS: ShopSettings = {
   shopName: 'DaMark',
-  managerTelegram: 'Anna_Kriukovets',
+  managerTelegram: 'Anastasiya_DaMark',
   viberPhone: '+380671770035',
-  fopName: 'ФОП Крюковець Ганна Володимирівна',
-  iban: '',
-  stockGroup: 'DaMrkshop',
+  fopName: 'ФОП Маловік Євгенія Володимирівна',
+  iban: 'UA073220010000026000350010013',
+  stockGroup: 'anna_DaMark',
   reserveHours: 24,
   blacklist: [],
   novaPoshta: { apiKey: '', senderName: '', senderPhone: '', senderCity: '', senderBranch: '' },
@@ -28,6 +28,24 @@ const EMPTY: ShopData = {
   settings: DEFAULT_SETTINGS,
 }
 
+// Contacts and payment details the shop has since replaced. A browser that
+// saved them while they were current gets today's instead; anything typed in
+// by hand is left alone.
+const REPLACED: Partial<Record<keyof ShopSettings, string[]>> = {
+  managerTelegram: ['Anna_Kriukovets'],
+  fopName: ['ФОП Крюковець Ганна Володимирівна'],
+  iban: [''],
+  stockGroup: ['DaMrkshop'],
+}
+
+function current(settings: ShopSettings): ShopSettings {
+  const next = { ...settings }
+  for (const [key, old] of Object.entries(REPLACED) as [keyof ShopSettings, string[]][]) {
+    if (old.includes(settings[key] as string)) (next as Record<string, unknown>)[key] = DEFAULT_SETTINGS[key]
+  }
+  return next
+}
+
 function load(): ShopData {
   try {
     const raw = localStorage.getItem(KEY)
@@ -36,11 +54,11 @@ function load(): ShopData {
     return {
       ...EMPTY,
       ...parsed,
-      settings: {
+      settings: current({
         ...DEFAULT_SETTINGS,
         ...parsed.settings,
         novaPoshta: { ...DEFAULT_SETTINGS.novaPoshta, ...parsed.settings?.novaPoshta },
-      },
+      }),
     }
   } catch {
     return EMPTY

@@ -294,16 +294,14 @@ textarea.input { min-height: 96px; resize: vertical; }
 .demo-banner a { font-weight: 700; }
 
 .brand-dot {
-  display: grid;
-  place-items: center;
+  display: block;
+  flex: none;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--hero);
-  color: #0f2747;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: -.02em;
+  object-fit: cover;
+  background: #31a7fe;
+  box-shadow: 0 0 0 2px #fff, 0 4px 10px -4px rgba(15, 39, 71, .5);
 }
 
 table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
