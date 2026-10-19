@@ -73,14 +73,30 @@
   }
   .name { margin: 14px 0 0; font-size: 28px; font-weight: 800; letter-spacing: -.01em; }
 
+  /* "Open in a browser" hint: in the page's own blues, but filled and moving
+     a little, so it is the first thing read under the logo. */
   .help {
-    display: flex; gap: 12px; align-items: center; width: 100%; margin: 18px 0 0; padding: 12px 14px;
-    border: 0; border-radius: 16px; background: #fff3c4; color: #3d2f00;
-    font: inherit; font-size: 14px; line-height: 1.35; text-align: left;
+    display: flex; gap: 12px; align-items: center; width: 100%; margin: 18px 0 0; padding: 14px 12px;
+    border: 0; border-radius: 18px; background: linear-gradient(135deg, #1a74d2 0%, #1459a8 100%); color: #fff;
+    font: inherit; font-size: 14px; line-height: 1.38; text-align: left;
+    box-shadow: 0 14px 28px -16px rgba(20, 89, 168, .95);
   }
-  .help b { font-weight: 700; }
-  .help-ico { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #ffd34d; font-size: 22px; font-weight: 800; letter-spacing: 1px; }
-  .in-app .help { box-shadow: 0 0 0 3px #ffd34d; cursor: pointer; }
+  .help b { font-weight: 800; }
+  .help-ico {
+    position: relative; flex: none; display: grid; place-items: center; width: 42px; height: 42px;
+    border-radius: 50%; background: #fff; color: var(--deep); font-size: 22px; font-weight: 800; letter-spacing: 1px;
+  }
+  .help-ico::after {
+    content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .8);
+    animation: ring 1.8s ease-out infinite;
+  }
+  @keyframes ring { from { transform: scale(.85); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
+  .help-to { flex: none; width: 26px; height: 26px; align-self: flex-start; opacity: .9; }
+  @media (prefers-reduced-motion: reduce) { .help-ico::after { animation: none; opacity: .45; } }
+  .in-app .help { box-shadow: 0 0 0 3px #9fd6ff, 0 14px 28px -16px rgba(20, 89, 168, .95); cursor: pointer; }
+
+  /* The explanation shown inside TikTok (common.js) in the same blues. */
+  :root { --dm-accent: #7fcbff; --dm-main: #1459a8; }
 
   section { margin-top: 26px; }
   .label { margin: 0 0 10px 4px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--deep); }
@@ -147,6 +163,7 @@
   <button class="help" type="button" data-open-help>
     <span class="help-ico dots" aria-hidden="true">⋯</span>
     <span>Telegram не відкривається з TikTok? Натисніть <b class="dots">⋯</b> у правому верхньому куті → <b>«Відкрити в браузері»</b></span>
+    <svg class="help-to" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
   </button>
 
   <section aria-labelledby="order">
