@@ -12,6 +12,7 @@
 Каждое изменение в `main` само публикуется на GitHub Pages.
 
 - Мультиссылка: https://nexlyy.github.io/damark/
+- Варианты мультиссылки рядом: https://nexlyy.github.io/damark/variants/
 - Каталог: https://nexlyy.github.io/damark/shop/
 - Админка: https://nexlyy.github.io/damark/shop/#/admin
 - Админка с примером: https://nexlyy.github.io/damark/shop/#/admin?demo=1

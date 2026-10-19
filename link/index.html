@@ -1,21 +1,21 @@
 <!doctype html>
 <!--
   DaMark shop: the one link in the TikTok and Instagram bios.
+  Variant 1, "Блакитний": the logo on top and everything in cards below.
+  Other variants live in v/, and all of them side by side in variants/.
 
-  A single file with no build step. Every address and every line of the
-  payment details is written into the page below; to change one, search for
-  it. The ones most likely to change:
+  The contacts and payment details are written into the page; to change one,
+  search for it. The phone and the IBAN each appear twice: as text and in the
+  copy button.
 
     https://t.me/Anastasiya_DaMark       manager, Telegram (orders, screenshots)
-    +380671770035                        phone for orders, Viber, calls
+    +380671770035                        phone for orders, Viber
     https://t.me/anna_DaMark             Telegram group with the stock
     https://www.instagram.com/damarkshop/
     ФОП Маловік Євгенія Володимирівна    payment recipient, IBAN and codes
 
-  Opened inside TikTok, Instagram or Facebook, the page asks the visitor to
-  move to a real browser first: those apps often will not hand a t.me or
-  viber:// link on to Telegram or Viber. Add ?inapp=1 to the address to see
-  that screen in an ordinary browser.
+  common.js copies the payment details and, inside TikTok or Instagram,
+  explains how to open the page in a browser. Add ?inapp=1 to see that.
 -->
 <html lang="uk">
 <head>
@@ -33,8 +33,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="logo-128.jpg">
-<link rel="apple-touch-icon" href="logo-128.jpg">
+<link rel="icon" href="img/logo-128.jpg">
+<link rel="apple-touch-icon" href="img/logo-128.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
@@ -45,374 +45,109 @@
     --muted: #4f6788;
     --faint: #7b8ea8;
     --line: #e2ecf6;
-    --brand-deep: #1663b8;
-    --logo-blue: #31a7fe;
+    --deep: #1663b8;
+    --logo: #31a7fe;
     --soft: #e3f2ff;
-    --card: #ffffff;
-    --telegram: #2aabee;
-    --viber: #7360f2;
-    --note-bg: #fff6e8;
-    --note-line: #f3cf8d;
-    --note-ink: #5d3a00;
+    --card: #fff;
     --alarm: #c4291c;
     --shadow: 0 1px 0 rgba(15, 39, 71, .04), 0 10px 26px -16px rgba(15, 39, 71, .45);
   }
-
   *, *::before, *::after { box-sizing: border-box; }
   [hidden] { display: none !important; }
-
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
-    min-height: 100vh;
     background: linear-gradient(180deg, #cfe8fd 0, var(--bg) 300px);
     color: var(--ink);
     font: 400 16px/1.45 Montserrat, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   a { color: inherit; }
-  b { font-weight: 700; }
+  .page { max-width: 480px; margin: 0 auto; padding: 0 16px calc(32px + env(safe-area-inset-bottom)); }
 
-  .page {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 16px calc(32px + env(safe-area-inset-bottom));
-  }
-
-  /* Header */
-
-  .head { position: relative; text-align: center; padding-top: 56px; }
-  .cover { position: absolute; inset: 0 -16px auto; width: calc(100% + 32px); height: 128px; display: block; }
+  .head { position: relative; text-align: center; padding-top: 52px; }
+  .cover { position: absolute; inset: 0 -16px auto; width: calc(100% + 32px); height: 124px; display: block; }
   .logo {
-    position: relative;
-    display: block;
-    width: 136px;
-    height: 136px;
-    margin: 0 auto;
-    border-radius: 50%;
-    border: 5px solid #fff;
-    box-shadow: 0 12px 30px -14px rgba(15, 39, 71, .6);
-    background: var(--logo-blue);
-    object-fit: cover;
+    position: relative; display: block; width: 136px; height: 136px; margin: 0 auto;
+    border-radius: 50%; border: 5px solid #fff; background: var(--logo);
+    box-shadow: 0 12px 30px -14px rgba(15, 39, 71, .6); object-fit: cover;
   }
-  .name { margin: 14px 0 2px; font-size: 28px; font-weight: 800; letter-spacing: -.01em; }
-  .tag { margin: 0; color: var(--muted); font-weight: 500; }
-  .pill {
-    display: inline-block;
-    margin: 12px 0 0;
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: var(--card);
-    box-shadow: var(--shadow);
-    font-size: 14px;
-    font-weight: 600;
-  }
+  .name { margin: 14px 0 0; font-size: 28px; font-weight: 800; letter-spacing: -.01em; }
 
-  /* Sections */
+  .help {
+    display: flex; gap: 12px; align-items: center; width: 100%; margin: 18px 0 0; padding: 12px 14px;
+    border: 0; border-radius: 16px; background: #fff3c4; color: #3d2f00;
+    font: inherit; font-size: 14px; line-height: 1.35; text-align: left;
+  }
+  .help b { font-weight: 700; }
+  .help-ico { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #ffd34d; font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+  .in-app .help { box-shadow: 0 0 0 3px #ffd34d; cursor: pointer; }
 
   section { margin-top: 26px; }
-  .label {
-    margin: 0 0 10px 4px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--brand-deep);
-  }
+  .label { margin: 0 0 10px 4px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--deep); }
   .stack { display: grid; gap: 10px; }
   .card { padding: 16px; border-radius: 20px; background: var(--card); box-shadow: var(--shadow); }
 
-  /* Buttons */
-
   .btn {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    min-height: 64px;
-    padding: 10px 14px 10px 10px;
-    border: 0;
-    border-radius: 18px;
-    background: var(--card);
-    color: var(--ink);
-    font: inherit;
-    text-align: left;
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-    -webkit-tap-highlight-color: transparent;
-    transition: transform .12s ease, filter .12s ease;
+    display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 14px 10px 10px;
+    border-radius: 18px; background: var(--card); color: var(--ink); text-decoration: none;
+    box-shadow: var(--shadow); -webkit-tap-highlight-color: transparent; transition: transform .12s ease;
   }
-  .btn:active { transform: scale(.98); filter: brightness(.97); }
-  .btn:focus-visible { outline: 3px solid var(--logo-blue); outline-offset: 2px; }
-  .btn-main { min-height: 76px; background: linear-gradient(135deg, #3aaeff 0%, var(--brand-deep) 100%); color: #fff; }
+  .btn:active { transform: scale(.98); }
+  .btn-main { min-height: 76px; background: linear-gradient(135deg, #3aaeff 0%, var(--deep) 100%); color: #fff; }
   .ico { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; color: #fff; }
   .ico svg { width: 25px; height: 25px; }
   .btn-main .ico { background: rgba(255, 255, 255, .2); }
-  .ico.tg { background: var(--telegram); }
-  .ico.vb { background: var(--viber); }
-  .ico.ph { background: #19a463; }
-  .ico.ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+  .tg { background: #2aabee; } .vb { background: #7360f2; }
+  .ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
   .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-  .txt b { font-size: 16px; }
-  .btn-main .txt b { font-size: 17px; }
-  .txt small { font-size: 13px; opacity: .8; overflow-wrap: anywhere; }
+  .txt b { font-size: 16px; } .btn-main .txt b { font-size: 17px; }
+  .txt small { font-size: 13px; opacity: .8; }
   .go { flex: none; font-size: 28px; line-height: 1; opacity: .45; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .row2 .btn { min-height: 60px; padding-right: 10px; gap: 10px; }
-  .row2 .ico { width: 40px; height: 40px; border-radius: 12px; }
-  .row2 .ico svg { width: 22px; height: 22px; }
-
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; }
-  .steps li {
-    padding: 10px 6px 9px;
-    border-radius: 14px;
-    background: var(--card);
-    box-shadow: var(--shadow);
-    text-align: center;
-    font-size: 12.5px;
-    line-height: 1.3;
-    font-weight: 500;
-  }
-  .steps i {
-    display: grid;
-    place-items: center;
-    width: 26px;
-    height: 26px;
-    margin: 0 auto 6px;
-    border-radius: 50%;
-    background: var(--soft);
-    color: var(--brand-deep);
-    font-style: normal;
-    font-weight: 700;
-    font-size: 13px;
-  }
+  .steps li { padding: 10px 6px 9px; border-radius: 14px; background: var(--card); box-shadow: var(--shadow); text-align: center; font-size: 12.5px; line-height: 1.3; font-weight: 500; }
+  .steps i { display: grid; place-items: center; width: 26px; height: 26px; margin: 0 auto 6px; border-radius: 50%; background: var(--soft); color: var(--deep); font-style: normal; font-weight: 700; font-size: 13px; }
   .hint { margin: 10px 4px 0; font-size: 13px; color: var(--muted); }
   .hint b { color: var(--ink); }
 
-  /* Payment details */
-
   .req { padding: 6px 16px 16px; }
-  .req-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
-  .req-row:last-of-type { border-bottom: 0; }
-  .req-row div { flex: 1; min-width: 0; }
-  .req-row span { display: block; font-size: 12.5px; color: var(--faint); font-weight: 600; }
-  .req-row b {
-    display: block;
-    font-size: 16px;
-    letter-spacing: .01em;
-    overflow-wrap: anywhere;
-    -webkit-user-select: all;
-    user-select: all;
-    font-variant-numeric: tabular-nums;
-  }
-  .copy {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border: 0;
-    border-radius: 12px;
-    background: var(--soft);
-    color: var(--brand-deep);
-    cursor: pointer;
-  }
+  .row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .row div { flex: 1; min-width: 0; }
+  .row span { display: block; font-size: 12.5px; color: var(--faint); font-weight: 600; }
+  .row b { display: block; font-size: 16px; overflow-wrap: anywhere; -webkit-user-select: all; user-select: all; font-variant-numeric: tabular-nums; }
+  .copy { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border: 0; border-radius: 12px; background: var(--soft); color: var(--deep); cursor: pointer; }
   .copy svg { width: 20px; height: 20px; }
   .copy.done { background: #dcf5e6; color: #13734a; }
-  .copy-all {
-    width: 100%;
-    margin-top: 8px;
-    min-height: 50px;
-    border: 0;
-    border-radius: 14px;
-    background: var(--brand-deep);
-    color: #fff;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-  }
+  .all { width: 100%; margin-top: 12px; min-height: 50px; border: 0; border-radius: 14px; background: var(--deep); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
   .warn { display: flex; gap: 10px; margin: 12px 2px 0; font-size: 13.5px; color: var(--alarm); font-weight: 600; }
   .warn svg { flex: none; width: 20px; height: 20px; }
-
-  /* Terms */
 
   .terms { margin: 0; padding: 4px 16px; list-style: none; }
   .terms li { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
   .terms li:last-child { border-bottom: 0; }
-  .terms li::before {
-    content: "";
-    flex: none;
-    width: 8px;
-    height: 8px;
-    margin-top: .5em;
-    border-radius: 50%;
-    background: var(--logo-blue);
-  }
+  .terms li::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: .5em; border-radius: 50%; background: var(--logo); }
   .terms li.no::before { background: var(--alarm); }
-
-  .note {
-    padding: 16px;
-    border: 1px solid var(--note-line);
-    border-radius: 20px;
-    background: var(--note-bg);
-    color: var(--note-ink);
-    font-size: 15px;
-  }
-  .note b { color: #3d2400; }
-
+  .terms .big { font-weight: 700; }
+  .note { padding: 16px; border: 1px solid #f3cf8d; border-radius: 20px; background: #fff6e8; color: #5d3a00; font-size: 15px; }
   .foot { margin-top: 28px; text-align: center; color: var(--muted); font-size: 14px; }
   .foot strong { display: block; margin-top: 4px; color: var(--ink); font-size: 16px; }
-
-  .toast {
-    position: fixed;
-    left: 50%;
-    bottom: calc(20px + env(safe-area-inset-bottom));
-    z-index: 30;
-    transform: translateX(-50%);
-    max-width: calc(100% - 32px);
-    padding: 10px 16px;
-    border-radius: 12px;
-    background: var(--ink);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: var(--shadow);
-  }
-
-  /* Inside TikTok / Instagram: the strip that stays on top */
-
-  .bar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 10px 16px;
-    border: 0;
-    background: #ffd34d;
-    color: #2b2100;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.3;
-    text-align: left;
-    cursor: pointer;
-    box-shadow: 0 4px 14px -6px rgba(0, 0, 0, .35);
-  }
-  .bar span { flex: 1; }
-  .bar svg { flex: none; width: 28px; height: 28px; }
-
-  /* Inside TikTok / Instagram: "open this in a browser first" */
-
-  .sheet {
-    position: fixed;
-    inset: 0;
-    z-index: 20;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 96px 12px calc(12px + env(safe-area-inset-bottom));
-    background: rgba(6, 20, 42, .82);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
-    overflow-y: auto;
-  }
-  .arrow {
-    position: fixed;
-    top: 4px;
-    right: 10px;
-    width: 92px;
-    height: 92px;
-    color: #ffd34d;
-    animation: nudge 1.2s ease-in-out infinite;
-  }
-  @keyframes nudge {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(4px, -6px); }
-  }
-  @media (prefers-reduced-motion: reduce) { .arrow { animation: none; } }
-  .sheet-card { width: 100%; max-width: 440px; padding: 22px 18px 14px; border-radius: 22px; background: var(--card); color: var(--ink); }
-  .sheet-card h2 { margin: 0 0 6px; font-size: 21px; line-height: 1.25; outline: none; }
-  .sheet-card p { margin: 0 0 14px; color: var(--muted); font-size: 15px; }
-  .sheet-card ol { margin: 0 0 16px; padding: 0; list-style: none; counter-reset: n; }
-  .sheet-card li {
-    counter-increment: n;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    font-size: 16px;
-    border-top: 1px solid var(--line);
-  }
-  .sheet-card li:first-child { border-top: 0; }
-  .sheet-card li::before {
-    content: counter(n);
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: var(--brand-deep);
-    color: #fff;
-    font-weight: 700;
-    font-size: 15px;
-  }
-  .dots {
-    display: inline-grid;
-    place-items: center;
-    min-width: 34px;
-    height: 26px;
-    padding: 0 6px;
-    border-radius: 8px;
-    background: #eef3f9;
-    font-weight: 700;
-    letter-spacing: 1px;
-    vertical-align: middle;
-  }
-  .sheet-card .stack { margin-bottom: 6px; }
-  .sheet-card .btn { min-height: 56px; justify-content: center; text-align: center; }
-  .sheet-card .btn:not(.btn-main) { box-shadow: inset 0 0 0 1.5px #cfdcec; }
-  .copied { margin: 4px 2px 0 !important; font-size: 14px !important; color: #19734a !important; }
-  .plain {
-    display: block;
-    width: 100%;
-    margin-top: 6px;
-    padding: 12px;
-    border: 0;
-    background: none;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 500;
-    text-align: center;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    cursor: pointer;
-  }
 </style>
 </head>
 <body>
-
-<button class="bar" id="bar" type="button" hidden>
-  <span>Telegram не відкривається? Натисніть <b class="dots-inline">⋯</b> вгорі праворуч → «Відкрити в браузері»</span>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-</button>
-
 <main class="page">
   <header class="head">
-    <svg class="cover" viewBox="0 0 400 128" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 0h400v96c-58 26-122 30-200 12S58 82 0 104Z" fill="#31a7fe"/>
-      <path d="M-10 70c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="10"/>
-      <path d="M-10 30c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="10"/>
+    <svg class="cover" viewBox="0 0 400 124" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0h400v92c-58 26-122 30-200 12S58 78 0 100Z" fill="#31a7fe"/>
+      <path d="M-10 66c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="10"/>
+      <path d="M-10 28c52-20 104-20 156 0s104 20 156 0 72-16 108-6" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="10"/>
     </svg>
-    <img class="logo" src="logo.jpg" width="136" height="136" alt="DaMark">
+    <img class="logo" src="img/logo.jpg" width="136" height="136" alt="DaMark">
     <h1 class="name">DaMark shop</h1>
-    <p class="tag">Одяг • білизна • аксесуари</p>
-    <p class="pill">Доставка Новою поштою 1–3 дні 🚚</p>
   </header>
+
+  <button class="help" type="button" data-open-help>
+    <span class="help-ico dots" aria-hidden="true">⋯</span>
+    <span>Telegram не відкривається з TikTok? Натисніть <b class="dots">⋯</b> у правому верхньому куті → <b>«Відкрити в браузері»</b></span>
+  </button>
 
   <section aria-labelledby="order">
     <h2 class="label" id="order">Як замовити</h2>
@@ -421,30 +156,17 @@
       <li><i>2</i>Надішліть його менеджеру</li>
       <li><i>3</i>Оплатіть на рахунок ФОП</li>
     </ol>
-
     <div class="stack">
       <a class="btn btn-main" data-app href="https://t.me/Anastasiya_DaMark">
-        <span class="ico">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg>
-        </span>
+        <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg></span>
         <span class="txt"><b>Надіслати скрін менеджеру</b><small>Telegram · @Anastasiya_DaMark</small></span>
         <span class="go" aria-hidden="true">›</span>
       </a>
-
-      <div class="row2">
-        <a class="btn" data-app href="viber://chat?number=%2B380671770035">
-          <span class="ico vb">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8c5.1 0 8.6 2.8 8.6 7.8s-3.5 7.7-8.6 7.7c-.8 0-1.6-.1-2.4-.2L6.4 20.6v-3.3C4.4 16 3.4 13.7 3.4 10.6c0-5 3.5-7.8 8.6-7.8Z"/><path fill="currentColor" stroke="none" d="M9.3 7.2c.3-.3.7-.2.9.1l.9 1.4c.2.3.1.7-.1.9l-.5.4c.4 1 1.3 1.9 2.3 2.4l.4-.5c.2-.3.6-.3.9-.1l1.4.9c.3.2.4.6.1.9l-.6.7c-.4.4-1 .6-1.6.4-2.2-.8-3.9-2.5-4.7-4.7-.2-.6 0-1.2.4-1.6Z"/></svg>
-          </span>
-          <span class="txt"><b>Viber</b><small>067 177 00 35</small></span>
-        </a>
-        <a class="btn" href="tel:+380671770035">
-          <span class="ico ph">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
-          </span>
-          <span class="txt"><b>Подзвонити</b><small>067 177 00 35</small></span>
-        </a>
-      </div>
+      <a class="btn" data-app href="viber://chat?number=%2B380671770035">
+        <span class="ico vb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8c5.1 0 8.6 2.8 8.6 7.8s-3.5 7.7-8.6 7.7c-.8 0-1.6-.1-2.4-.2L6.4 20.6v-3.3C4.4 16 3.4 13.7 3.4 10.6c0-5 3.5-7.8 8.6-7.8Z"/><path fill="currentColor" stroke="none" d="M9.3 7.2c.3-.3.7-.2.9.1l.9 1.4c.2.3.1.7-.1.9l-.5.4c.4 1 1.3 1.9 2.3 2.4l.4-.5c.2-.3.6-.3.9-.1l1.4.9c.3.2.4.6.1.9l-.6.7c-.4.4-1 .6-1.6.4-2.2-.8-3.9-2.5-4.7-4.7-.2-.6 0-1.2.4-1.6Z"/></svg></span>
+        <span class="txt"><b>Або у Viber</b><small>067 177 00 35</small></span>
+        <span class="go" aria-hidden="true">›</span>
+      </a>
     </div>
     <p class="hint">Замовлення приймає тільки <b>@Anastasiya_DaMark</b> і номер <b>067 177 00 35</b>. Звіряйте саме нік і номер — ім’я та фото легко підробити.</p>
   </section>
@@ -453,16 +175,12 @@
     <h2 class="label" id="look">Товари та новинки</h2>
     <div class="stack">
       <a class="btn" data-app href="https://t.me/anna_DaMark">
-        <span class="ico tg">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg>
-        </span>
+        <span class="ico tg"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg></span>
         <span class="txt"><b>Telegram-група з товаром</b><small>наявність, ефіри, новинки</small></span>
         <span class="go" aria-hidden="true">›</span>
       </a>
       <a class="btn" href="https://www.instagram.com/damarkshop/">
-        <span class="ico ig">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
-        </span>
+        <span class="ico ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></span>
         <span class="txt"><b>Instagram</b><small>@damarkshop</small></span>
         <span class="go" aria-hidden="true">›</span>
       </a>
@@ -471,44 +189,26 @@
 
   <section aria-labelledby="pay">
     <h2 class="label" id="pay">Реквізити для оплати</h2>
-    <div class="card req">
-      <div class="req-row">
-        <div><span>Отримувач</span><b>ФОП Маловік Євгенія Володимирівна</b></div>
-        <button class="copy" type="button" data-copy="ФОП Маловік Євгенія Володимирівна" aria-label="Скопіювати отримувача">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg>
-        </button>
-      </div>
-      <div class="req-row">
-        <div><span>IBAN</span><b>UA07 3220 0100 0002 6000 3500 1001 3</b></div>
-        <button class="copy" type="button" data-copy="UA073220010000026000350010013" aria-label="Скопіювати IBAN">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg>
-        </button>
-      </div>
-      <div class="req-row">
-        <div><span>ІПН / ЄДРПОУ</span><b>3110406220</b></div>
-        <button class="copy" type="button" data-copy="3110406220" aria-label="Скопіювати ІПН">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg>
-        </button>
-      </div>
-      <div class="req-row">
-        <div><span>ЄДРПОУ банку</span><b>21133352</b></div>
-        <button class="copy" type="button" data-copy="21133352" aria-label="Скопіювати ЄДРПОУ банку">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg>
-        </button>
-      </div>
-      <button class="copy-all" type="button" id="copy-all">Скопіювати всі реквізити</button>
+    <div class="card req" data-copy-group>
+      <div class="row"><div><span>Отримувач</span><b>ФОП Маловік Євгенія Володимирівна</b></div>
+        <button class="copy" type="button" data-copy="ФОП Маловік Євгенія Володимирівна" data-label="Отримувач" aria-label="Скопіювати отримувача"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+      <div class="row"><div><span>IBAN</span><b>UA07 3220 0100 0002 6000 3500 1001 3</b></div>
+        <button class="copy" type="button" data-copy="UA073220010000026000350010013" data-label="IBAN" aria-label="Скопіювати IBAN"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+      <div class="row"><div><span>ІПН / ЄДРПОУ</span><b>3110406220</b></div>
+        <button class="copy" type="button" data-copy="3110406220" data-label="ІПН / ЄДРПОУ" aria-label="Скопіювати ІПН"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+      <div class="row" style="border-bottom:0"><div><span>ЄДРПОУ банку</span><b>21133352</b></div>
+        <button class="copy" type="button" data-copy="21133352" data-label="ЄДРПОУ банку" aria-label="Скопіювати ЄДРПОУ банку"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+      <button class="all" type="button" data-copy-all>Скопіювати всі реквізити</button>
     </div>
-    <p class="warn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.8 7.5 10 4.3-1.2 7.5-5.2 7.5-10v-6L12 2.5Z"/><path d="M12 8v5" stroke-linecap="round"/><circle cx="12" cy="16.3" r=".6" fill="currentColor"/></svg>
-      <span>Оплата — лише на цей рахунок. Якщо вам надіслали інші реквізити, це шахраї.</span>
-    </p>
+    <p class="warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 4.5 5.5v6c0 4.8 3.2 8.8 7.5 10 4.3-1.2 7.5-5.2 7.5-10v-6L12 2.5Z"/><path d="M12 8v5" stroke-linecap="round"/><circle cx="12" cy="16.3" r=".6" fill="currentColor"/></svg>
+      <span>Оплата — лише на цей рахунок. Якщо вам надіслали інші реквізити, це шахраї.</span></p>
   </section>
 
   <section aria-labelledby="terms">
     <h2 class="label" id="terms">Умови оплати та доставки</h2>
     <ul class="card terms">
+      <li class="big">Доставка Новою поштою — 1–3 дні</li>
       <li>Лише повна оплата на рахунок ФОП.</li>
-      <li>Доставка Новою поштою, 1–3 дні.</li>
       <li>Огляд — на пошті.</li>
       <li class="no">Товар, замовлений на поштомат, обміну та поверненню не підлягає.</li>
       <li class="no">Товар, забраний з пошти, обміну та поверненню не підлягає.</li>
@@ -516,166 +216,12 @@
     </ul>
   </section>
 
-  <section aria-label="Важливо">
-    <div class="note">
-      <b>Маєте відкладений товар?</b> Повідомте про це менеджеру. Якщо не повідомите, відкладені речі буде відправлено за рахунок
-      отримувача.
-    </div>
+  <section aria-label="Відкладений товар">
+    <div class="note"><b>Маєте відкладений товар?</b> Повідомте про це менеджеру. Якщо не повідомите, відкладені речі буде відправлено за рахунок отримувача.</div>
   </section>
 
-  <p class="foot">
-    Дякуємо за розуміння та довіру до нас
-    <strong>Ваш DaMark shop ♥️</strong>
-  </p>
+  <p class="foot">Дякуємо за розуміння та довіру до нас <strong>Ваш DaMark shop ♥️</strong></p>
 </main>
-
-<div class="toast" id="toast" role="status" hidden></div>
-
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
-  <svg class="arrow" viewBox="0 0 92 92" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 84C20 50 40 28 72 16"/><path d="M52 12 74 15 66 36"/></svg>
-
-  <div class="sheet-card">
-    <h2 id="sheet-title" tabindex="-1">Спочатку відкрийте сторінку в браузері</h2>
-    <p>З <span id="app-name">TikTok</span> Telegram і Viber часто не відкриваються. Це займе 2 секунди:</p>
-    <ol>
-      <li><span>Натисніть <span class="dots" id="dots">⋯</span> у <b>правому верхньому куті</b></span></li>
-      <li><span>Оберіть <b id="menu-item">«Відкрити в браузері»</b></span></li>
-    </ol>
-    <div class="stack">
-      <a class="btn btn-main" id="chrome" hidden><span class="txt"><b>Відкрити в Chrome</b></span></a>
-      <button class="btn" id="copy-link" type="button"><span class="txt"><b>Скопіювати посилання</b></span></button>
-    </div>
-    <p class="copied" id="copied" hidden>Скопійовано ✓ Відкрийте Safari або Chrome і вставте посилання в адресний рядок.</p>
-    <a class="plain" id="anyway" hidden>Все одно спробувати тут</a>
-    <button class="plain" id="close" type="button">Закрити</button>
-  </div>
-</div>
-
-<script>
-(function () {
-  var $ = function (id) { return document.getElementById(id); };
-  var toastTimer;
-
-  function toast(text) {
-    var el = $('toast');
-    el.textContent = text;
-    el.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { el.hidden = true; }, 2200);
-  }
-
-  // Clipboard first; the old select-and-copy where an app's browser blocks
-  // it; and if both fail, a box with the text to copy by hand.
-  function copy(text, done) {
-    function byHand() {
-      var field = document.createElement('textarea');
-      field.value = text;
-      field.setAttribute('readonly', '');
-      field.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-      document.body.appendChild(field);
-      field.select();
-      field.setSelectionRange(0, text.length);
-      var ok = false;
-      try { ok = document.execCommand('copy'); } catch (e) {}
-      document.body.removeChild(field);
-      if (ok) done();
-      else window.prompt('Скопіюйте:', text);
-    }
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(done, byHand);
-    } else {
-      byHand();
-    }
-  }
-
-  var buttons = document.querySelectorAll('[data-copy]');
-  Array.prototype.forEach.call(buttons, function (button) {
-    button.addEventListener('click', function () {
-      copy(button.getAttribute('data-copy'), function () {
-        button.classList.add('done');
-        setTimeout(function () { button.classList.remove('done'); }, 1500);
-        toast('Скопійовано: ' + button.parentNode.querySelector('span').textContent);
-      });
-    });
-  });
-
-  $('copy-all').addEventListener('click', function () {
-    var rows = document.querySelectorAll('.req-row');
-    var text = Array.prototype.map.call(rows, function (row) {
-      return row.querySelector('span').textContent + ': ' + row.querySelector('[data-copy]').getAttribute('data-copy');
-    }).join('\n');
-    copy(text, function () { toast('Усі реквізити скопійовано'); });
-  });
-
-  // Inside TikTok, Instagram or Facebook: ask to move to a real browser.
-  var ua = navigator.userAgent || '';
-  var forced = /[?&]inapp=1(&|$)/.test(location.search);
-  var app =
-    /musical_ly|bytedance|tiktok|trill_/i.test(ua) ? 'TikTok' :
-    /instagram/i.test(ua) ? 'Instagram' :
-    /FBAN|FBAV|FB_IAB|FBIOS/.test(ua) ? 'Facebook' :
-    forced ? 'TikTok' : '';
-
-  if (!app) return;
-
-  var android = /android/i.test(ua);
-  var page = location.protocol + '//' + location.host + location.pathname;
-  var bar = $('bar');
-  var sheet = $('sheet');
-  var anyway = $('anyway');
-
-  $('app-name').textContent = app;
-  if (android) {
-    $('dots').textContent = '⋮';
-    bar.querySelector('.dots-inline').textContent = '⋮';
-  }
-  if (app === 'Instagram') {
-    $('menu-item').textContent = android ? '«Відкрити в Chrome»' : '«Відкрити в зовнішньому браузері»';
-  }
-
-  // Android lets a page hand itself to Chrome directly; iOS has no such door.
-  if (android && /^https?:$/.test(location.protocol)) {
-    var chrome = $('chrome');
-    chrome.href = 'intent://' + location.host + location.pathname + location.search +
-      '#Intent;scheme=https;package=com.android.chrome;end';
-    chrome.hidden = false;
-  }
-
-  function show(target) {
-    anyway.hidden = !target;
-    if (target) anyway.href = target;
-    bar.hidden = true;
-    sheet.hidden = false;
-    $('sheet-title').focus();
-  }
-
-  function hide() {
-    sheet.hidden = true;
-    bar.hidden = false;
-  }
-
-  $('copy-link').addEventListener('click', function () {
-    copy(page, function () {
-      $('copied').hidden = false;
-      $('copy-link').querySelector('b').textContent = 'Посилання скопійовано';
-    });
-  });
-
-  bar.addEventListener('click', function () { show(); });
-  $('close').addEventListener('click', hide);
-  sheet.addEventListener('click', function (e) { if (e.target === sheet) hide(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) hide(); });
-
-  // Telegram and Viber buttons: explain first, and leave a way through.
-  document.addEventListener('click', function (e) {
-    var link = e.target.closest && e.target.closest('a[data-app]');
-    if (!link) return;
-    e.preventDefault();
-    show(link.href);
-  });
-
-  show();
-})();
-</script>
+<script src="common.js"></script>
 </body>
 </html>

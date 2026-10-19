@@ -1,0 +1,195 @@
+<!doctype html>
+<!--
+  DaMark link page, variant 5 "Крок за кроком": the page is the instructions.
+  Five numbered steps down a line, from opening the page in a browser to the
+  parcel, each with its own buttons. Contacts and details: see the comment in
+  ../../index.html.
+-->
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f6e9f7">
+<meta name="robots" content="noindex">
+<title>DaMark shop — варіант «Крок за кроком»</title>
+<link rel="icon" href="../../img/logo-128.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+  :root {
+    --ink: #2f1f38;
+    --muted: #7a6684;
+    --plum: #8c3d8a;
+    --plum-2: #b45fae;
+    --soft: #f3e2f5;
+    --card: #fff;
+    --line: #eedcf0;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, #f6e9f7 0%, #fdeef3 100%);
+    min-height: 100vh;
+    color: var(--ink);
+    font: 400 16px/1.45 Nunito, system-ui, sans-serif;
+  }
+  a { color: inherit; }
+  .page { max-width: 480px; margin: 0 auto; padding: 20px 16px calc(32px + env(safe-area-inset-bottom)); }
+
+  .top { display: flex; align-items: center; gap: 12px; }
+  .top img { width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 0 0 3px #fff; }
+  .top h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -.01em; }
+  .top p { margin: 0; color: var(--muted); font-size: 14px; font-weight: 600; }
+  .banner { margin-top: 16px; border-radius: 24px; overflow: hidden; box-shadow: 0 16px 34px -22px rgba(80, 30, 90, .7); }
+  .banner img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 52%; }
+
+  ol.flow { margin: 22px 0 0; padding: 0; list-style: none; counter-reset: s; }
+  .step { position: relative; padding: 0 0 22px 54px; counter-increment: s; }
+  .step::before {
+    content: counter(s); position: absolute; left: 0; top: 0; z-index: 1;
+    display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
+    background: var(--plum); color: #fff; font-weight: 900; font-size: 17px; box-shadow: 0 0 0 4px #f8ebf6;
+  }
+  .step::after { content: ""; position: absolute; left: 18px; top: 38px; bottom: 0; width: 2px; background: repeating-linear-gradient(var(--plum-2) 0 6px, transparent 6px 11px); }
+  .step:last-child::after { display: none; }
+  .step h2 { margin: 6px 0 10px; font-size: 19px; font-weight: 900; line-height: 1.2; }
+  .box { padding: 14px; border-radius: 20px; background: var(--card); box-shadow: 0 10px 26px -20px rgba(80, 30, 90, .7); }
+  .box p { margin: 0; font-size: 14.5px; }
+  .muted { color: var(--muted); }
+
+  .mock { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 12px; border-radius: 14px; background: #1f1724; color: #fff; font-size: 13px; font-weight: 700; }
+  .mock .x { opacity: .6; }
+  .mock .grow { flex: 1; text-align: center; opacity: .7; font-weight: 600; }
+  .mock .dots-btn { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #ffd34d; color: #1f1724; font-weight: 900; letter-spacing: 1px; box-shadow: 0 0 0 4px rgba(255, 211, 77, .35); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 9px rgba(255, 211, 77, 0); } }
+  @media (prefers-reduced-motion: reduce) { .mock .dots-btn { animation: none; } }
+  .help { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; }
+  .in-app .step-1 .box { box-shadow: 0 0 0 3px #ffd34d; }
+
+  .btn {
+    display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 8px 14px 8px 8px; margin-top: 10px;
+    border-radius: 16px; background: var(--soft); text-decoration: none; font-weight: 800;
+  }
+  .btn:first-child { margin-top: 0; }
+  .btn .i { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; color: #fff; }
+  .btn .i svg { width: 23px; height: 23px; }
+  .btn small { display: block; font-weight: 600; font-size: 12.5px; color: var(--muted); }
+  .btn.main { min-height: 70px; background: linear-gradient(135deg, var(--plum-2), var(--plum)); color: #fff; font-size: 17px; }
+  .btn.main small { color: rgba(255, 255, 255, .85); }
+  .btn.main .i { background: rgba(255, 255, 255, .2); }
+  .tg { background: #2aabee; } .vb { background: #7360f2; }
+  .ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+  .who { margin: 10px 2px 0; font-size: 12.5px; color: var(--muted); }
+
+  .row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .row:first-child { padding-top: 2px; }
+  .row div { flex: 1; min-width: 0; }
+  .row span { display: block; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .row b { display: block; font-weight: 800; overflow-wrap: anywhere; -webkit-user-select: all; user-select: all; font-variant-numeric: tabular-nums; }
+  .copy { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 12px; background: var(--soft); color: var(--plum); cursor: pointer; }
+  .copy svg { width: 18px; height: 18px; }
+  .copy.done { background: #dcf5e6; color: #13734a; }
+  .all { width: 100%; margin-top: 12px; min-height: 48px; border: 0; border-radius: 14px; background: var(--ink); color: #fff; font: inherit; font-weight: 800; cursor: pointer; }
+  .warn { margin: 10px 0 0 !important; font-size: 13px !important; font-weight: 700; color: #b3261e; }
+
+  .big { font-size: 22px; font-weight: 900; }
+  .terms { margin: 10px 0 0; padding: 0; list-style: none; }
+  .terms li { padding: 8px 0 8px 26px; position: relative; font-size: 14.5px; border-top: 1px solid var(--line); }
+  .terms li::before { content: "✓"; position: absolute; left: 2px; color: #1f8a5b; font-weight: 900; }
+  .terms li.no::before { content: "✕"; color: #b3261e; }
+
+  .note { margin-top: 4px; padding: 16px; border-radius: 20px; background: #fff4d6; color: #5d3a00; font-size: 15px; }
+  .foot { margin-top: 24px; text-align: center; color: var(--muted); font-size: 14px; }
+  .foot strong { display: block; margin-top: 2px; font-size: 18px; font-weight: 900; color: var(--plum); }
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div class="top">
+      <img src="../../img/logo-128.jpg" alt="" width="56" height="56">
+      <div><h1>DaMark shop</h1><p>Як замовити — 5 простих кроків</p></div>
+    </div>
+    <div class="banner"><img src="../../img/anna-shop.jpg" alt="Анна серед товару DaMark shop"></div>
+  </header>
+
+  <ol class="flow">
+    <li class="step step-1">
+      <h2>Відкрийте сторінку в браузері</h2>
+      <button class="box help" type="button" data-open-help>
+        <span class="mock" aria-hidden="true"><span class="x">✕</span><span class="grow">TikTok</span><span class="dots-btn dots">⋯</span></span>
+        <span style="display:block;font-size:14.5px">Натисніть <b class="dots">⋯</b> у правому верхньому куті й оберіть <b>«Відкрити в браузері»</b>. Інакше Telegram може не відкритися.</span>
+      </button>
+    </li>
+
+    <li class="step">
+      <h2>Оберіть річ</h2>
+      <div class="box">
+        <a class="btn" data-app href="https://t.me/anna_DaMark">
+          <span class="i tg"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg></span>
+          <span>Група з товаром<small>наявність, ефіри, новинки</small></span>
+        </a>
+        <a class="btn" href="https://www.instagram.com/damarkshop/">
+          <span class="i ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+          <span>Instagram<small>@damarkshop</small></span>
+        </a>
+      </div>
+    </li>
+
+    <li class="step">
+      <h2>Надішліть скрін менеджеру</h2>
+      <div class="box">
+        <a class="btn main" data-app href="https://t.me/Anastasiya_DaMark">
+          <span class="i"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.8 19.4c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8.1c.4-.3-.1-.5-.6-.2L6.5 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.6 3c.9-.3 1.6.2 1.3 1.3Z"/></svg></span>
+          <span>Telegram<small>@Anastasiya_DaMark</small></span>
+        </a>
+        <a class="btn" data-app href="viber://chat?number=%2B380671770035">
+          <span class="i vb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8c5.1 0 8.6 2.8 8.6 7.8s-3.5 7.7-8.6 7.7c-.8 0-1.6-.1-2.4-.2L6.4 20.6v-3.3C4.4 16 3.4 13.7 3.4 10.6c0-5 3.5-7.8 8.6-7.8Z"/><path fill="currentColor" stroke="none" d="M9.3 7.2c.3-.3.7-.2.9.1l.9 1.4c.2.3.1.7-.1.9l-.5.4c.4 1 1.3 1.9 2.3 2.4l.4-.5c.2-.3.6-.3.9-.1l1.4.9c.3.2.4.6.1.9l-.6.7c-.4.4-1 .6-1.6.4-2.2-.8-3.9-2.5-4.7-4.7-.2-.6 0-1.2.4-1.6Z"/></svg></span>
+          <span>Або Viber<small>067 177 00 35</small></span>
+        </a>
+        <p class="who">Замовлення приймає тільки @Anastasiya_DaMark і номер 067 177 00 35.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <h2>Оплатіть на рахунок ФОП</h2>
+      <div class="box" data-copy-group>
+        <div class="row"><div><span>Отримувач</span><b>ФОП Маловік Євгенія Володимирівна</b></div>
+          <button class="copy" type="button" data-copy="ФОП Маловік Євгенія Володимирівна" data-label="Отримувач" aria-label="Скопіювати отримувача"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+        <div class="row"><div><span>IBAN</span><b>UA07 3220 0100 0002 6000 3500 1001 3</b></div>
+          <button class="copy" type="button" data-copy="UA073220010000026000350010013" data-label="IBAN" aria-label="Скопіювати IBAN"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+        <div class="row"><div><span>ІПН / ЄДРПОУ</span><b>3110406220</b></div>
+          <button class="copy" type="button" data-copy="3110406220" data-label="ІПН / ЄДРПОУ" aria-label="Скопіювати ІПН"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+        <div class="row"><div><span>ЄДРПОУ банку</span><b>21133352</b></div>
+          <button class="copy" type="button" data-copy="21133352" data-label="ЄДРПОУ банку" aria-label="Скопіювати ЄДРПОУ банку"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8.5h11v11h-11zM15.5 8.5v-4h-11v11h4"/></svg></button></div>
+        <button class="all" type="button" data-copy-all>Скопіювати всі реквізити</button>
+        <p class="warn">Оплата — лише на цей рахунок. Якщо вам надіслали інші реквізити, це шахраї.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <h2>Отримайте посилку</h2>
+      <div class="box">
+        <p class="big">Нова пошта · 1–3 дні</p>
+        <ul class="terms">
+          <li>Лише повна оплата на рахунок ФОП</li>
+          <li>Огляд — на пошті</li>
+          <li class="no">Товар, замовлений на поштомат, обміну та поверненню не підлягає</li>
+          <li class="no">Товар, забраний з пошти, обміну та поверненню не підлягає</li>
+          <li class="no">Акційний товар обміну та поверненню не підлягає</li>
+        </ul>
+      </div>
+    </li>
+  </ol>
+
+  <div class="note"><b>Маєте відкладений товар?</b> Повідомте про це менеджеру. Якщо не повідомите, відкладені речі буде відправлено за рахунок отримувача.</div>
+
+  <p class="foot">Дякуємо за розуміння та довіру до нас <strong>Ваш DaMark shop ♥️</strong></p>
+</main>
+<script src="../../common.js"></script>
+</body>
+</html>
