@@ -14,15 +14,14 @@ set -eu
 export MSYS_NO_PATHCONV=1
 export MSYS2_ARG_CONV_EXCL='*'
 
-HOST="${DAMARK_HOST:-mcr}"
-IP="${DAMARK_IP:-204.168.243.140}"
+. "$(dirname "$0")/server.sh"
 S="${DAMARK_SUDO:-}"
 
 cd "$(dirname "$0")"
 
 install_conf() {
-  ssh "$HOST" 'cat > /tmp/damark.net.conf' < "$1"
-  ssh "$HOST" "
+  on_server 'cat > /tmp/damark.net.conf' < "$1"
+  on_server "
     set -eu
     site=/etc/nginx/sites-available/damark.net
     $S mkdir -p /var/www/html /var/www/damark
@@ -48,16 +47,16 @@ case "${1:-}" in
     ;;
   cert)
     for name in damark.net www.damark.net; do
-      got=$(ssh "$HOST" "getent ahostsv4 $name | awk '{print \$1}' | sort -u | tr '\n' ' '" || true)
+      got=$(on_server "getent ahostsv4 $name | awk '{print \$1}' | sort -u | tr '\n' ' '" || true)
       case " $got" in
         *" $IP "*) echo "$name → $IP" ;;
         *) echo "$name does not point at $IP yet (it answers: ${got:-nothing}). Change the A record and wait." >&2; exit 1 ;;
       esac
     done
-    ssh "$HOST" "$S certbot certonly --webroot -w /var/www/html -d damark.net -d www.damark.net --non-interactive --keep-until-expiring"
+    on_server "$S certbot certonly --webroot -w /var/www/html -d damark.net -d www.damark.net --non-interactive --keep-until-expiring"
     ;;
   https)
-    ssh "$HOST" "$S test -f /etc/letsencrypt/live/damark.net/fullchain.pem" \
+    on_server "$S test -f /etc/letsencrypt/live/damark.net/fullchain.pem" \
       || { echo "No certificate for damark.net yet: run 'sh deploy/setup.sh cert' first." >&2; exit 1; }
     install_conf nginx-damark.conf
     echo "Open https://damark.net/"

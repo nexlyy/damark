@@ -6,7 +6,7 @@
 # The copy goes out as a tarball and is unpacked beside the live directory,
 # which is then swapped in one move: nginx never serves a half-written tree,
 # and the previous build stays as .old to fall back to. Same as daon.pl, on the
-# same machine, over the same `ssh mcr` login.
+# same machine, over the same `ssh mcr` login (or run it on the server itself).
 
 set -eu
 
@@ -14,7 +14,7 @@ set -eu
 export MSYS_NO_PATHCONV=1
 export MSYS2_ARG_CONV_EXCL='*'
 
-HOST="${DAMARK_HOST:-mcr}"
+. "$(dirname "$0")/server.sh"
 ROOT="${DAMARK_ROOT:-/var/www/damark}"
 URL="${DAMARK_URL:-https://damark.net/}"
 
@@ -33,7 +33,7 @@ cp -r shop/dist/. .site/shop/
 find .site -name '*.html' -exec sed -i.bak "s#https://nexlyy.github.io/damark/#$URL#g" {} +
 find .site -name '*.bak' -delete
 
-tar -czf - -C .site . | ssh "$HOST" "
+tar -czf - -C .site . | on_server "
   set -eu
   rm -rf '$ROOT.new'
   mkdir -p '$ROOT.new'
