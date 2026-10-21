@@ -4,6 +4,7 @@
 #   sh deploy/setup.sh http    the site over plain HTTP, ready for certbot
 #   sh deploy/setup.sh cert    a Let's Encrypt certificate; DNS must point here first
 #   sh deploy/setup.sh https   the full config: HTTPS, redirects, caching
+#   sh deploy/setup.sh renew   reload nginx after each renewal, then a test renewal
 #
 # Every config step runs `nginx -t` before reloading. If the test fails, the
 # previous damark.net file is put back and nothing is reloaded, so a mistake
@@ -40,6 +41,20 @@ install_conf() {
   "
 }
 
+# certonly --webroot leaves nginx alone, so a renewed certificate would sit on
+# disk unused until the one nginx holds expired. This hook reloads nginx after
+# every renewal, daon.pl's included; a reload drops no connections.
+install_renew_hook() {
+  on_server "
+    set -eu
+    hook=/etc/letsencrypt/renewal-hooks/deploy/reload-nginx
+    $S mkdir -p /etc/letsencrypt/renewal-hooks/deploy
+    printf '#!/bin/sh\nsystemctl reload nginx\n' | $S tee \$hook >/dev/null
+    $S chmod 755 \$hook
+    echo \"renewals now reload nginx (\$hook)\"
+  "
+}
+
 case "${1:-}" in
   http)
     install_conf nginx-damark-http.conf
@@ -54,6 +69,11 @@ case "${1:-}" in
       esac
     done
     on_server "$S certbot certonly --webroot -w /var/www/html -d damark.net -d www.damark.net --non-interactive --keep-until-expiring"
+    install_renew_hook
+    ;;
+  renew)
+    install_renew_hook
+    on_server "$S certbot renew --cert-name damark.net --dry-run"
     ;;
   https)
     on_server "$S test -f /etc/letsencrypt/live/damark.net/fullchain.pem" \
@@ -62,7 +82,7 @@ case "${1:-}" in
     echo "Open https://damark.net/"
     ;;
   *)
-    echo "usage: sh deploy/setup.sh http | cert | https" >&2
+    echo "usage: sh deploy/setup.sh http | cert | https | renew" >&2
     exit 2
     ;;
 esac
