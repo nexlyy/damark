@@ -13,9 +13,7 @@
   рядом с daon.pl; как выложить и обновить — [`deploy/`](deploy/).
   Пока полноценный сайт в работе, магазина на домене нет.
 
-Копия для просмотра сама публикуется из `main` на GitHub Pages:
-
-- Мультиссылка: https://nexlyy.github.io/damark/
-- Варианты мультиссылки рядом: https://nexlyy.github.io/damark/variants/
-- Демо-магазин: https://nexlyy.github.io/damark/shop/
-- Админка с примером: https://nexlyy.github.io/damark/shop/#/admin?demo=1
+Старый адрес https://nexlyy.github.io/damark/ с любого пути перекидывает на
+damark.net (`deploy/github-pages-redirect.html`, публикуется из `main`).
+Варианты мультиссылки и демо-магазин живут только в репозитории: открыть
+`link/variants/index.html` или запустить `npm run dev` в `shop/`.

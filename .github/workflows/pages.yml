@@ -1,7 +1,9 @@
 name: Publish to GitHub Pages
 
-# The one-link page goes at the root of the site, the shop template under
-# /shop/. Every push to main publishes both.
+# damark.net is the only public address. The GitHub Pages copy is a redirect
+# there from every path, so old links to the link page, its variants or the
+# shop demo still land somewhere useful and no second copy of the requisites
+# stays online.
 
 on:
   push:
@@ -23,24 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: shop/package-lock.json
-
-      - name: Build the shop template
-        working-directory: shop
-        run: |
-          npm ci
-          npm run build
-
       - name: Lay out the site
         run: |
-          mkdir -p site/shop
-          cp -r link/. site/
-          find site -name '*.md' -delete
-          cp -r shop/dist/. site/shop/
+          mkdir -p site
+          cp deploy/github-pages-redirect.html site/index.html
+          cp deploy/github-pages-redirect.html site/404.html
           touch site/.nojekyll
 
       # Pages can also be set to publish the branch as it is, which puts the raw
