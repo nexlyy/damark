@@ -9,14 +9,13 @@
 
 ## На сайте
 
-Каждое изменение в `main` само публикуется на GitHub Pages.
+- **https://damark.net/** — только мультиссылка. Стоит на сервере `mcr`
+  рядом с daon.pl; как выложить и обновить — [`deploy/`](deploy/).
+  Пока полноценный сайт в работе, магазина на домене нет.
+
+Копия для просмотра сама публикуется из `main` на GitHub Pages:
 
 - Мультиссылка: https://nexlyy.github.io/damark/
 - Варианты мультиссылки рядом: https://nexlyy.github.io/damark/variants/
-- Каталог: https://nexlyy.github.io/damark/shop/
-- Админка: https://nexlyy.github.io/damark/shop/#/admin
+- Демо-магазин: https://nexlyy.github.io/damark/shop/
 - Админка с примером: https://nexlyy.github.io/damark/shop/#/admin?demo=1
-
-Картинка для превью ссылки в Telegram (`link/og.png`) указана полным адресом
-`https://nexlyy.github.io/damark/og.png`. При переезде на свой домен адрес
-нужно поменять в `link/index.html` и `shop/index.html`.

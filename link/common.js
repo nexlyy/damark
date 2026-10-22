@@ -4,10 +4,10 @@
   - [data-copy="text"]           copies the text; data-label names it in the toast
   - [data-copy-all]              copies every [data-copy][data-label] inside the
                                  nearest [data-copy-group], one "label: text" a line
-  - .dots                        shows ⋮ on Android, where the menu has those
   - a[data-app]                  Telegram and Viber links: inside TikTok,
                                  Instagram or Facebook a tap first explains how to
-                                 open the page in a real browser, then lets through
+                                 open the page in a real browser, or to copy the
+                                 username or number into the app by hand
   - [data-track="name"]          counts a tap as an Umami event, on pages that
                                  load the Umami script; elsewhere does nothing
 
@@ -53,6 +53,7 @@
     '.dm-card .dm-dots{display:inline-grid;place-items:center;min-width:34px;height:26px;padding:0 6px;border-radius:8px;background:#f0eef4;font-weight:700;letter-spacing:1px}',
     '.dm-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;margin-top:8px;border:0;border-radius:14px;background:#f0eef4;color:#1d1b22;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}',
     '.dm-btn.dm-main{background:var(--dm-main,#1d1b22);color:#fff}',
+    '.dm-btn{flex-direction:column}.dm-btn small{margin-top:2px;font-size:13px;font-weight:600;opacity:.7}',
     '.dm-plain{display:block;width:100%;margin-top:6px;padding:12px;border:0;background:none;color:#5b5868;font:inherit;font-size:15px;text-align:center;text-decoration:underline;text-underline-offset:3px;cursor:pointer}',
     '.dm-ok{margin:8px 2px 0!important;color:#19734a!important;font-size:14px!important}',
   ].join('\n')
@@ -126,16 +127,19 @@
     }
   })
 
-  if (android) {
-    Array.prototype.forEach.call(document.querySelectorAll('.dots'), function (el) { el.textContent = '⋮' })
-  }
-
   if (!app) return
   document.documentElement.classList.add('in-app')
   if (detected) track('Зайшли із застосунку', { app: detected })
 
-  var dots = android ? '⋮' : '⋯'
+  // TikTok's menu is ⋯ on every phone, Instagram's and Facebook's are ⋮ on
+  // Android. TikTok also refuses intent:// links ("action failed") and stops
+  // t.me links at a page of its own, so there it gets neither the Chrome
+  // button nor "try here anyway": only the menu, the copied page link, or the
+  // contact copied to paste into Telegram or Viber by hand.
+  var tiktok = app === 'TikTok'
+  var dots = android && !tiktok ? '⋮' : '⋯'
   var item = app === 'Instagram' ? (android ? '«Відкрити в Chrome»' : '«Відкрити в зовнішньому браузері»') : '«Відкрити в браузері»'
+  var chrome = android && !tiktok && /^https?:$/.test(location.protocol)
   var page = location.protocol + '//' + location.host + location.pathname
 
   var sheet = document.createElement('div')
@@ -148,24 +152,59 @@
     '<svg class="dm-arrow" viewBox="0 0 92 92" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 84C20 50 40 28 72 16"/><path d="M52 12 74 15 66 36"/></svg>' +
     '<div class="dm-card">' +
     '<h2 id="dm-title" tabindex="-1">Спочатку відкрийте сторінку в браузері</h2>' +
-    '<p>З ' + app + ' Telegram і Viber часто не відкриваються. Це займе 2 секунди:</p>' +
+    '<p>' + (tiktok ? 'TikTok не відкриває Telegram і Viber.' : 'З ' + app + ' Telegram і Viber часто не відкриваються.') + ' Це займе 2 секунди:</p>' +
     '<ol><li><span>Натисніть <span class="dm-dots">' + dots + '</span> у <b>правому верхньому куті</b></span></li>' +
     '<li><span>Оберіть <b>' + item + '</b></span></li></ol>' +
-    (android && /^https?:$/.test(location.protocol)
+    (chrome
       ? '<a class="dm-btn dm-main" href="intent://' + location.host + location.pathname + location.search + '#Intent;scheme=https;package=com.android.chrome;end" data-track="Відкрили в Chrome">Відкрити в Chrome</a>'
       : '') +
-    '<button class="dm-btn" type="button" data-dm="copy">Скопіювати посилання</button>' +
-    '<p class="dm-ok" hidden>Скопійовано ✓ Відкрийте Safari або Chrome і вставте посилання в адресний рядок.</p>' +
-    '<a class="dm-plain" data-dm="anyway" data-track="Все одно спробували тут" hidden>Все одно спробувати тут</a>' +
+    '<button class="dm-btn' + (chrome ? '' : ' dm-main') + '" type="button" data-dm="copy">Скопіювати посилання</button>' +
+    '<button class="dm-btn" type="button" data-dm="contact" hidden></button>' +
+    '<p class="dm-ok" role="status" hidden></p>' +
+    (tiktok ? '' : '<a class="dm-plain" data-dm="anyway" data-track="Все одно спробували тут" hidden>Все одно спробувати тут</a>') +
     '<button class="dm-plain" type="button" data-dm="close">Закрити</button>' +
     '</div>'
   document.body.appendChild(sheet)
 
+  var copyBtn = sheet.querySelector('[data-dm="copy"]')
+  var contactBtn = sheet.querySelector('[data-dm="contact"]')
+  var ok = sheet.querySelector('.dm-ok')
   var anyway = sheet.querySelector('[data-dm="anyway"]')
+  var contact
+
+  // The Telegram username or Viber number behind a link, to paste into that
+  // app's search when the link itself will not open.
+  function contactOf(href) {
+    var tg = /^https:\/\/t\.me\/(\w+)/.exec(href || '')
+    if (tg) return { app: 'Telegram', text: '@' + tg[1], shown: '@' + tg[1] }
+    var vb = /^viber:\/\/chat\?number=([^&]+)/.exec(href || '')
+    if (vb) {
+      var n = decodeURIComponent(vb[1])
+      return { app: 'Viber', text: n, shown: n.replace(/^\+380(\d\d)(\d{3})(\d\d)(\d\d)$/, '+380 $1 $2 $3 $4') }
+    }
+    return null
+  }
+
+  function say(text) {
+    ok.textContent = text
+    ok.hidden = false
+  }
 
   function show(target) {
-    anyway.hidden = !target
-    if (target) anyway.href = target
+    contact = contactOf(target)
+    contactBtn.hidden = !contact
+    if (contact) {
+      contactBtn.textContent = contact.app === 'Viber' ? 'Скопіювати номер' : 'Скопіювати нік'
+      var small = document.createElement('small')
+      small.textContent = contact.shown
+      contactBtn.appendChild(small)
+    }
+    copyBtn.textContent = 'Скопіювати посилання'
+    ok.hidden = true
+    if (anyway) {
+      anyway.hidden = !target
+      if (target) anyway.href = target
+    }
     sheet.hidden = false
     sheet.querySelector('#dm-title').focus()
   }
@@ -173,12 +212,23 @@
 
   sheet.addEventListener('click', function (e) {
     var act = e.target.closest && e.target.closest('[data-dm]')
-    if (e.target === sheet || (act && act.getAttribute('data-dm') === 'close')) return hide()
-    if (act && act.getAttribute('data-dm') === 'copy') {
+    var what = act && act.getAttribute('data-dm')
+    if (e.target === sheet || what === 'close') return hide()
+    if (what === 'copy') {
       copy(page, function () {
         track('Скопіювали посилання на сторінку')
-        sheet.querySelector('.dm-ok').hidden = false
-        act.textContent = 'Посилання скопійовано'
+        copyBtn.textContent = 'Посилання скопійовано ✓'
+        say('Відкрийте Chrome або Safari і вставте посилання в адресний рядок.')
+      })
+    }
+    if (what === 'contact' && contact) {
+      var c = contact
+      copy(c.text, function () {
+        track('Скопіювали контакт', { contact: c.text })
+        contactBtn.textContent = 'Скопійовано ✓'
+        say(c.app === 'Viber'
+          ? 'Відкрийте Viber, натисніть пошук і вставте номер.'
+          : 'Відкрийте Telegram, натисніть пошук і вставте ' + c.text + '.')
       })
     }
   })
@@ -189,7 +239,7 @@
     var link = e.target.closest && e.target.closest('a[data-app]')
     if (!link || sheet.contains(link)) return
     e.preventDefault()
-    show(link.href)
+    show(link.getAttribute('href'))
   })
 
   // Any element marked data-open-help opens the explanation on tap.
