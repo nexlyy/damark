@@ -8,6 +8,8 @@
   - a[data-app]                  Telegram and Viber links: inside TikTok,
                                  Instagram or Facebook a tap first explains how to
                                  open the page in a real browser, then lets through
+  - [data-track="name"]          counts a tap as an Umami event, on pages that
+                                 load the Umami script; elsewhere does nothing
 
   Add ?inapp=1 to the address to see the in-app behaviour in a normal browser.
 */
@@ -15,11 +17,24 @@
   var ua = navigator.userAgent || ''
   var android = /android/i.test(ua)
   var forced = /[?&]inapp=1(&|$)/.test(location.search)
-  var app =
+  var detected =
     /musical_ly|bytedance|tiktok|trill_/i.test(ua) ? 'TikTok' :
     /instagram/i.test(ua) ? 'Instagram' :
-    /FBAN|FBAV|FB_IAB|FBIOS/.test(ua) ? 'Facebook' :
-    forced ? 'TikTok' : ''
+    /FBAN|FBAV|FB_IAB|FBIOS/.test(ua) ? 'Facebook' : ''
+  var app = detected || (forced ? 'TikTok' : '')
+
+  // Umami's script is deferred and this one is not, so early events wait for
+  // it. Umami's own data-umami-event is not used: on links it navigates by
+  // itself and would skip the explanation sheet below.
+  function track(name, data) {
+    function send() { try { window.umami.track(name, data) } catch (e) {} }
+    if (window.umami) send()
+    else window.addEventListener('load', send)
+  }
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-track]')
+    if (el) track(el.getAttribute('data-track'))
+  })
 
   var css = [
     '.dm-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));z-index:60;transform:translateX(-50%);max-width:calc(100% - 32px);padding:10px 16px;border-radius:12px;background:#1d1b22;color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1.3;box-shadow:0 10px 30px -12px rgba(0,0,0,.5)}',
@@ -93,6 +108,7 @@
         one.classList.add('done')
         setTimeout(function () { one.classList.remove('done') }, 1500)
         toast('Скопійовано: ' + (one.getAttribute('data-label') || 'текст'))
+        track('Копія реквізиту', { label: one.getAttribute('data-label') || '' })
       })
       return
     }
@@ -103,7 +119,10 @@
       var lines = Array.prototype.map.call(items, function (el) {
         return el.getAttribute('data-label') + ': ' + el.getAttribute('data-copy')
       })
-      copy(lines.join('\n'), function () { toast('Усі реквізити скопійовано') })
+      copy(lines.join('\n'), function () {
+        toast('Усі реквізити скопійовано')
+        track('Копія всіх реквізитів')
+      })
     }
   })
 
@@ -113,6 +132,7 @@
 
   if (!app) return
   document.documentElement.classList.add('in-app')
+  if (detected) track('Зайшли із застосунку', { app: detected })
 
   var dots = android ? '⋮' : '⋯'
   var item = app === 'Instagram' ? (android ? '«Відкрити в Chrome»' : '«Відкрити в зовнішньому браузері»') : '«Відкрити в браузері»'
@@ -132,11 +152,11 @@
     '<ol><li><span>Натисніть <span class="dm-dots">' + dots + '</span> у <b>правому верхньому куті</b></span></li>' +
     '<li><span>Оберіть <b>' + item + '</b></span></li></ol>' +
     (android && /^https?:$/.test(location.protocol)
-      ? '<a class="dm-btn dm-main" href="intent://' + location.host + location.pathname + location.search + '#Intent;scheme=https;package=com.android.chrome;end">Відкрити в Chrome</a>'
+      ? '<a class="dm-btn dm-main" href="intent://' + location.host + location.pathname + location.search + '#Intent;scheme=https;package=com.android.chrome;end" data-track="Відкрили в Chrome">Відкрити в Chrome</a>'
       : '') +
     '<button class="dm-btn" type="button" data-dm="copy">Скопіювати посилання</button>' +
     '<p class="dm-ok" hidden>Скопійовано ✓ Відкрийте Safari або Chrome і вставте посилання в адресний рядок.</p>' +
-    '<a class="dm-plain" data-dm="anyway" hidden>Все одно спробувати тут</a>' +
+    '<a class="dm-plain" data-dm="anyway" data-track="Все одно спробували тут" hidden>Все одно спробувати тут</a>' +
     '<button class="dm-plain" type="button" data-dm="close">Закрити</button>' +
     '</div>'
   document.body.appendChild(sheet)
@@ -156,6 +176,7 @@
     if (e.target === sheet || (act && act.getAttribute('data-dm') === 'close')) return hide()
     if (act && act.getAttribute('data-dm') === 'copy') {
       copy(page, function () {
+        track('Скопіювали посилання на сторінку')
         sheet.querySelector('.dm-ok').hidden = false
         act.textContent = 'Посилання скопійовано'
       })
