@@ -78,12 +78,13 @@ h3 { font-size: 16px; font-weight: 700; margin: 0 0 6px; }
 .link-btn { padding: 0; border: 0; background: none; color: var(--deep); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .badge { position: absolute; top: 3px; right: 1px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--deep); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; }
 
-input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea {
+/* :where keeps this at the lowest weight, so any component can restyle a field. */
+:where(input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea) {
   width: 100%; min-height: 46px; padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff;
   font-size: 16px; /* no zoom on iPhone */
 }
 textarea { min-height: 96px; resize: vertical; line-height: 1.45; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--logo); box-shadow: 0 0 0 3px rgba(49, 167, 254, 0.18); }
+:where(input, select, textarea):focus { outline: none; border-color: var(--logo); box-shadow: 0 0 0 3px rgba(49, 167, 254, 0.18); }
 input[type='checkbox'], input[type='radio'] { width: 20px; height: 20px; accent-color: var(--deep); }
 .field { display: grid; gap: 6px; margin: 0 0 14px; min-width: 0; }
 .field-label { font-size: 13.5px; font-weight: 600; color: var(--muted); }
