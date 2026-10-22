@@ -1,0 +1,31 @@
+[Unit]
+Description=DaMark shop (new.damark.net)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=damark
+Group=damark
+WorkingDirectory=/opt/damark/current
+EnvironmentFile=/etc/damark/app.env
+ExecStart=/opt/damark/node/bin/node dist/server/index.js
+Restart=always
+RestartSec=3
+
+# daon.pl shares this machine: cap what the shop may take.
+MemoryMax=700M
+CPUQuota=150%
+
+# The service writes only its data folder.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ReadWritePaths=/var/lib/damark
+UMask=0022
+
+[Install]
+WantedBy=multi-user.target

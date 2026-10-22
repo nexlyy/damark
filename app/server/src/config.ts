@@ -33,8 +33,10 @@ export const config = {
   novaPoshtaApi: env('NOVA_POSHTA_API', 'https://api.novaposhta.ua/v2.0/json/'),
 }
 
+// The database and backups sit in folders only the service can open;
+// photos in one nginx reads directly.
 export const paths = {
-  db: path.join(config.dataDir, 'damark.sqlite'),
+  db: path.join(config.dataDir, 'db', 'damark.sqlite'),
   media: path.join(config.dataDir, 'media'),
   backups: path.join(config.dataDir, 'backups'),
 }
