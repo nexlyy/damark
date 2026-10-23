@@ -83,3 +83,28 @@ rm -f /var/lib/damark/db/damark.sqlite-wal /var/lib/damark/db/damark.sqlite-shm
 chown damark:damark /var/lib/damark/db/damark.sqlite
 systemctl start damark
 ```
+
+## Доступ для Claude (автоматическая работа)
+
+Отдельный пользователь `claude` со своим ключом: его можно отключить в
+любой момент, не трогая ваш вход, а в `/var/log/auth.log` видно, что
+делал именно он.
+
+На сервере, под root:
+
+```sh
+adduser --disabled-password --gecos "" claude
+echo 'claude ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/claude && chmod 440 /etc/sudoers.d/claude
+install -d -m 700 -o claude -g claude /home/claude/.ssh
+ssh-keygen -q -t ed25519 -N '' -C claude-code -f /root/claude_key
+install -m 600 -o claude -g claude /root/claude_key.pub /home/claude/.ssh/authorized_keys
+base64 -w0 /root/claude_key; echo
+```
+
+Последняя команда печатает ключ одной строкой. Его кладут в настройки
+окружения Claude Code (не в чат) переменной `MCR_SSH_KEY`, затем удаляют с
+сервера: `rm /root/claude_key /root/claude_key.pub`. В сессии Claude
+запускает `sh deploy/agent-ssh.sh`.
+
+Отключить доступ: `rm /home/claude/.ssh/authorized_keys` (или
+`deluser --remove-home claude && rm /etc/sudoers.d/claude`).
